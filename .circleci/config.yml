@@ -1,0 +1,10 @@
+orbs:
+    gcp-gcr: circleci/gcp-gcr@0.8.0
+version: 2.1
+workflows:
+    build_and_push_image:
+        jobs:
+            - gcp-gcr/build-and-push-image:
+                image: streamserver
+                registry-url: asia.gcr.io
+                tag: ${CIRCLE_SHA1}
