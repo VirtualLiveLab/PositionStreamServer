@@ -1,3 +1,3 @@
 # Position Stream Server
 
-[![CircleCI](https://circleci.com/gh/kai-maker/PositionStreamServer/tree/master.svg?style=svg&circle-token=c981f6969eb471ce384249ade35d73a3a88820a1)](https://circleci.com/gh/kai-maker/PositionStreamServer/tree/master)
+[![CircleCI](https://circleci.com/gh/MIKUEC2020/PositionStreamServer/tree/master.svg?style=svg&circle-token=0a7fc5748581995b2d99a947dc8d276e0dea4a4d)](https://circleci.com/gh/MIKUEC2020/PositionStreamServer/tree/master)
