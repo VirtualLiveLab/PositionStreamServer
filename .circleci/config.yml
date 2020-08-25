@@ -1,9 +1,21 @@
+jobs:
+    test:
+        working_directory: /temp
+        docker:
+            - image: mcr.microsoft.com/dotnet/core/sdk:3.1
+        environment:
+            DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+            DOTNET_CLI_TELEMETRY_OPTOUT: 1
+        steps:
+            - checkout
+            - run: cd /temp/StreamServer.Test && dotnet test
 orbs:
     gcp-gcr: circleci/gcp-gcr@0.8.0
 version: 2.1
 workflows:
     build_and_push_image:
         jobs:
+            - test
             - gcp-gcr/build-and-push-image:
                 image: streamserver
                 registry-url: asia.gcr.io
