@@ -95,5 +95,21 @@ namespace StreamServer
             }
             return buff;
         }
+
+        public static List<byte[]> PacketsToBuffers(List<MinimumAvatarPacket> packets)
+        {
+            var packetsList = new List<List<MinimumAvatarPacket>>();
+            const int nSize = 29;
+            for (int i = 0; i < packets.Count; i += nSize)
+            {
+                packetsList.Add(packets.GetRange(i, Math.Min(nSize, packets.Count - i)));
+            }
+            var buffersList = new List<byte[]>();
+            foreach (var pcs in packetsList)
+            {
+                buffersList.Add(PacketsToBuffer(pcs));
+            }
+            return buffersList;
+        }
     }
 }

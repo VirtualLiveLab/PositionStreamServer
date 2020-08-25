@@ -64,10 +64,13 @@ namespace StreamServer
                             packet.RadY,
                             packet.NeckRotation));
                     }
-                    var buf = Utility.PacketsToBuffer(packets);
+                    var buffs = Utility.PacketsToBuffers(packets);
                     foreach (var user in users)
                     {
-                        await udp.SendAsync(buf, buf.Length, user.RemoteEndPoint);
+                        foreach (var buf in buffs)
+                        {
+                            await udp.SendAsync(buf, buf.Length, user.RemoteEndPoint);
+                        }
                     }
                     token.ThrowIfCancellationRequested();
                     await delay;

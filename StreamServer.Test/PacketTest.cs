@@ -52,5 +52,30 @@ namespace StreamServer.Test
             Assert.Equal(packet.RadY, decodedPacket![0].RadY);
             Assert.Equal(packet.NeckRotation, decodedPacket![0].NeckRotation);
         }
+
+        [Fact]
+        public static void PacketTest4()
+        {
+            var packets = new List<MinimumAvatarPacket>();
+            for (int i = 0; i < 100; ++i)
+            {
+                var packet = new MinimumAvatarPacket($"packet{i}", new Vector3(2.2f, 5.2f, 6.8f), 50,
+                    new Vector4(2.1f, 4.6f, 3.0f, 3.1f));
+                packets.Add(packet);
+            }
+
+            var buffs = Utility.PacketsToBuffers(packets);
+            const int nSize = 29;
+            for (int i = 0; i < buffs.Count; ++i)
+            {
+                var decodedPacket = Utility.BufferToPackets(buffs[i]);
+                for (int j = 0; j < decodedPacket!.Count; ++j)
+                {
+                    Assert.Equal(packets[j + i*nSize].Position, decodedPacket![j].Position);
+                    Assert.Equal(packets[j + i*nSize].RadY, decodedPacket![j].RadY);
+                    Assert.Equal(packets[j + i*nSize].NeckRotation, decodedPacket![j].NeckRotation);
+                }
+            }
+        }
     }
 }
