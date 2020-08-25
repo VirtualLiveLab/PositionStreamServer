@@ -20,4 +20,4 @@ https://dotnet.microsoft.com/download
 
 ### テスト
 
-`cd StreamServer.Text && dotnet test`
+`cd StreamServer.Test && dotnet test`
