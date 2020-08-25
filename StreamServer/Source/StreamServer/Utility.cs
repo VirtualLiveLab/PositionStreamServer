@@ -54,16 +54,6 @@ namespace StreamServer
             return null;
         }
 
-        public static string PacketToString(PositionPacket positionPacket)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append($"[{positionPacket.PaketId}] ");
-            sb.Append($"X: {positionPacket.Position.X}  ");
-            sb.Append($"Y: {positionPacket.Position.Y}  ");
-            sb.Append($"Z: {positionPacket.Position.Z}");
-            return sb.ToString();
-        }
-
         public static byte[] PacketsToBuffer(List<MinimumAvatarPacket> packets)
         {
             byte[] buff = new byte[48 * packets.Count + 16];
