@@ -56,14 +56,6 @@ namespace StreamServer
                             users.Add(user.Value);
                         }
                     }
-                    var ofsettedPackets = new List<MinimumAvatarPacket>();
-                    foreach (var packet in packets)
-                    {
-                        ofsettedPackets.Add(new MinimumAvatarPacket(packet.PaketId,
-                            new Vector3(packet.Position.X, packet.Position.Y, packet.Position.Z + 5f),
-                            packet.RadY,
-                            packet.NeckRotation));
-                    }
                     var buffs = Utility.PacketsToBuffers(packets);
                     foreach (var user in users)
                     {
