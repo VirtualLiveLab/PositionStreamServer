@@ -42,12 +42,12 @@ namespace StreamServer
                     {
                         MinimumAvatarPacket? packet;
                         {
-                            packet = user.Value.PacketContainer.CurrentPacket;
-                            if (packet != null && DateTime.Now - user.Value.lastUpdated > new TimeSpan(0, 0, 2))
+                            packet = user.Value.CurrentPacket;
+                            if (packet != null && DateTime.Now - user.Value.DateTimeBox.LastUpdated > new TimeSpan(0, 0, 2))
                             {
                                 PrintDbg($"Disconnected: [{user.Value.UserId}] " +
-                                         $"({user.Value.remoteEndPoint!.Address}: {user.Value.remoteEndPoint.Port})");
-                                user.Value.PacketContainer.CurrentPacket = packet = null;
+                                         $"({user.Value.RemoteEndPoint!.Address}: {user.Value.RemoteEndPoint.Port})");
+                                user.Value.CurrentPacket = packet = null;
                             }
                         }
                         if (packet != null)
@@ -67,7 +67,7 @@ namespace StreamServer
                     var buf = Utility.PacketsToBuffer(packets);
                     foreach (var user in users)
                     {
-                        await udp.SendAsync(buf, buf.Length, user.remoteEndPoint);
+                        await udp.SendAsync(buf, buf.Length, user.RemoteEndPoint);
                     }
                     token.ThrowIfCancellationRequested();
                     await delay;
