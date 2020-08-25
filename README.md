@@ -12,11 +12,15 @@
 - dotnet core 3.1 SDK
 https://dotnet.microsoft.com/download
 
-### ビルド、実行
+### ビルド
 
 `git clone git@github.com:MIKUEC2020/PositionStreamServer.git`
 
 `cd StreamServer && dotnet build`
+
+### 実行
+
+`cd StreamServer && dotnet run`
 
 ### テスト
 
