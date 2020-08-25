@@ -1,3 +1,23 @@
 # Position Stream Server
 
 [![CircleCI](https://circleci.com/gh/MIKUEC2020/PositionStreamServer/tree/master.svg?style=svg&circle-token=0a7fc5748581995b2d99a947dc8d276e0dea4a4d)](https://circleci.com/gh/MIKUEC2020/PositionStreamServer/tree/master)
+
+3Dアバターの座標を多人数で共有するサーバー
+
+- 「体の座標」と「体のY軸周りの回転」と「頭の姿勢」を共有します。
+- 500人程度まで共有が可能です。
+
+### 依存SDK
+
+- dotnet core 3.1 SDK
+https://dotnet.microsoft.com/download
+
+### ビルド、実行
+
+`git clone git@github.com:MIKUEC2020/PositionStreamServer.git`
+
+`cd StreamServer && dotnet build`
+
+### テスト
+
+`cd StreamServer.Text && dotnet test`
