@@ -1,3 +1,4 @@
 .idea/
-StreamServer/bin/
-StreamServer/obj/
+bin/
+obj/
+*.DotSettings.user
