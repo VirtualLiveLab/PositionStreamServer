@@ -49,10 +49,11 @@ namespace StreamServer
                             var res = await udp.ReceiveAsync();
                             var buf = res.Buffer;
                             var packets = Utility.BufferToPackets(buf);
-                            if (packets != null && ModelManager.Instance.Users.ContainsKey(packets[0].PaketId))
+                            if (packets != null)
                             {
                                 var packet = packets[0];
-                                var user = ModelManager.Instance.Users[packet.PaketId];
+                                var user = ModelManager.Instance.Users.GetOrAdd(packet.PaketId,
+                                    new User(packet.PaketId));
                                 if (user.CurrentPacket == null)
                                 {
                                     PrintDbg($"Connected: [{user.UserId}] " +
