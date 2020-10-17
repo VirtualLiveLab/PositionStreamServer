@@ -54,16 +54,14 @@ namespace StreamServer
                         if (user.Value.IsConnected) users.Add(user.Value);
                         if (packet != null) packets.Add(packet);
                     }
-                    var buffs = Utility.PacketsToBuffers(packets);
+                    List<Task> tasks = new List<Task>();
                     foreach (var user in users)
                     {
-                        foreach (var buf in buffs)
-                        {
-                            await udp.SendAsync(buf, buf.Length, user.RemoteEndPoint);
-                        }
+                        tasks.Add(PacketSender.Send(packets, user, udp));
                     }
                     token.ThrowIfCancellationRequested();
-                    await delay;
+                    tasks.Add(delay);
+                    await Task.WhenAll(tasks);
                 }
             }
             catch (OperationCanceledException)
