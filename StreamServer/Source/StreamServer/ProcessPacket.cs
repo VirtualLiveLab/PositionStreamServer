@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using StreamServer.Model;
+using StreamServer.Data;
 
 namespace StreamServer
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
-using StreamServer.Model;
+using StreamServer.Data;
 
 namespace StreamServer
 {

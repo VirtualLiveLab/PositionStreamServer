@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StreamServer.Model
+namespace StreamServer.Data
 {
     public class DateTimeBox
     {

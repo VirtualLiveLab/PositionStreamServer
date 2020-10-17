@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using StreamServer.Model;
+using StreamServer.Data;
 using Xunit;
 
 namespace StreamServer.Test

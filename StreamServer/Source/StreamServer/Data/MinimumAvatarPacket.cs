@@ -1,4 +1,6 @@
-﻿namespace StreamServer.Model
+﻿using StreamServer.Data;
+
+namespace StreamServer.Data
 {
     public class MinimumAvatarPacket
     {

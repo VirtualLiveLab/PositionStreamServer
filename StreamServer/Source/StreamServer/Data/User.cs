@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace StreamServer.Model
+namespace StreamServer.Data
 {
     public class User
     {

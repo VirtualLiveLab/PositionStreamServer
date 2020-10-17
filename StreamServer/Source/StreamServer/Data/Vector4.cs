@@ -1,4 +1,4 @@
-﻿namespace StreamServer.Model
+﻿namespace StreamServer.Data
 {
     public readonly struct Vector4
     {
