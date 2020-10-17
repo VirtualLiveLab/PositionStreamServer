@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -31,7 +32,7 @@ namespace StreamServer
         public void Start()
         {
             IPEndPoint localEndPoint = (IPEndPoint)udp.Client.LocalEndPoint;
-            PrintDbg($"Any -> localhost: [{localEndPoint?.Port}]");
+            Utility.PrintDbg($"Any -> localhost: [{localEndPoint?.Port}]");
             Task.Run(() => Loop(cts.Token), cts.Token);
         }
 
@@ -46,50 +47,29 @@ namespace StreamServer
                     {
                         try
                         {
-                            var res = await udp.ReceiveAsync();
-                            var buf = res.Buffer;
-                            var packets = Utility.BufferToPackets(buf);
-                            if (packets != null && ModelManager.Instance.Users.ContainsKey(packets[0].PaketId))
-                            {
-                                var packet = packets[0];
-                                var user = ModelManager.Instance.Users[packet.PaketId];
-                                if (user.CurrentPacket == null)
-                                {
-                                    PrintDbg($"Connected: [{user.UserId}] " +
-                                             $"({res.RemoteEndPoint.Address}: {res.RemoteEndPoint.Port})");
-                                    user.RemoteEndPoint = res.RemoteEndPoint;
-                                }
-
-                                user.CurrentPacket = packet;
-                                user.DateTimeBox = new DateTimeBox(DateTime.Now);
-                            }
-                        }
-                        catch (SocketException e)
+                            UdpReceiveResult res;
+                            res = await udp.ReceiveAsync();
+                            ProcessPacket.Process(res);
+                        } catch (SocketException e)
                         {
                             if (e.ErrorCode != 10054) //Client Disconnected.
-                                PrintDbg(e);
+                                Utility.PrintDbg(e);
                         }
                     }
-
                     token.ThrowIfCancellationRequested();
                     await delay;
                 }
             }
             catch (OperationCanceledException)
             {
-                PrintDbg("Receiver stopped");
+                Utility.PrintDbg("Receiver stopped");
                 throw;
             }
             catch (Exception e)
             {
-                PrintDbg(e);
+                Utility.PrintDbg(e);
                 throw;
             }
-        }
-        
-        private void PrintDbg<T>(T obj)
-        {
-            Console.WriteLine($"[{name}] {obj}");
         }
     }
 }

@@ -21,6 +21,25 @@ namespace StreamServer
             return sb.ToString();
         }
         
+        public static MinimumAvatarPacket? BufferToPacket(byte[] buf)
+        {
+            if (buf == null || buf.Length != 64) return null;
+            var idLen = buf[16];
+            byte[] bStr = new byte[idLen];
+            Buffer.BlockCopy(buf, 16 + 1, bStr, 0, idLen);
+            var userId = System.Text.Encoding.UTF8.GetString(bStr);
+            var x = BitConverter.ToSingle(buf,  32);
+            var y = BitConverter.ToSingle(buf,  32 + sizeof(float));
+            var z = BitConverter.ToSingle(buf,  32 + sizeof(float) * 2);
+            var radY = BitConverter.ToSingle(buf,  32 + sizeof(float) * 3);
+            var qx = BitConverter.ToSingle(buf, 48);
+            var qy = BitConverter.ToSingle(buf, 48 + sizeof(float));
+            var qz = BitConverter.ToSingle(buf, 48 + sizeof(float) * 2);
+            var qw = BitConverter.ToSingle(buf, 48+ sizeof(float) * 3);
+            MinimumAvatarPacket packet = new MinimumAvatarPacket(userId, new Vector3(x, y, z), radY, new Vector4(qx, qy, qz, qw));
+            return packet;
+        }
+        
         public static List<MinimumAvatarPacket>? BufferToPackets(byte[] buf)
         {
             if (buf != null && buf.Length > 0)
@@ -100,6 +119,11 @@ namespace StreamServer
                 buffersList.Add(PacketsToBuffer(pcs));
             }
             return buffersList;
+        }
+        
+        public static void PrintDbg<T>(T str, object? sender = null)
+        {
+            Console.WriteLine($"[{sender}] {str}");
         }
     }
 }

@@ -43,11 +43,12 @@ namespace StreamServer
                         MinimumAvatarPacket? packet;
                         {
                             packet = user.Value.CurrentPacket;
-                            if (packet != null && DateTime.Now - user.Value.DateTimeBox.LastUpdated > new TimeSpan(0, 0, 2))
+                            if (user.Value.IsConnected && packet != null && DateTime.Now - user.Value.DateTimeBox.LastUpdated > new TimeSpan(0, 0, 2))
                             {
                                 PrintDbg($"Disconnected: [{user.Value.UserId}] " +
                                          $"({user.Value.RemoteEndPoint!.Address}: {user.Value.RemoteEndPoint.Port})");
                                 user.Value.CurrentPacket = packet = null;
+                                user.Value.IsConnected = false;
                             }
                         }
                         if (packet != null)
