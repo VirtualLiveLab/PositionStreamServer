@@ -26,7 +26,7 @@ namespace StreamServer
         public void Start()
         {
             var localEndPoint = udp.Client.LocalEndPoint as IPEndPoint;
-            PrintDbg($"localhost: [{localEndPoint?.Port}] -> Any");
+            Utility.PrintDbg($"localhost: [{localEndPoint?.Port}] -> Any");
             Task.Run(() => Loop(cts.Token), cts.Token);
         }
 
@@ -46,7 +46,7 @@ namespace StreamServer
                             packet = user.Value.CurrentPacket;
                             if (user.Value.IsConnected && packet != null && DateTime.Now - user.Value.DateTimeBox!.LastUpdated > new TimeSpan(0, 0, 2))
                             {
-                                PrintDbg($"Disconnected: [{user.Value.UserId}] " +
+                                Utility.PrintDbg($"Disconnected: [{user.Value.UserId}] " +
                                          $"({user.Value.RemoteEndPoint!.Address}: {user.Value.RemoteEndPoint.Port})");
                                 user.Value.CurrentPacket = packet = null;
                                 user.Value.IsConnected = false;
@@ -70,11 +70,6 @@ namespace StreamServer
                 Console.WriteLine("Sender stopped");
                 throw;
             }
-        }
-
-        private void PrintDbg<T>(T str)
-        {
-            Console.WriteLine($"[{name}] {str}");
         }
     }
 }
