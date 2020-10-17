@@ -72,6 +72,34 @@ namespace StreamServer
             }
             return null;
         }
+        
+        public static byte[] PacketToBuffer(MinimumAvatarPacket packet)
+        {
+            byte[] buff = new byte[64];
+            var numPackets = BitConverter.GetBytes(1);
+            Buffer.BlockCopy(numPackets, 0,  buff, 0, sizeof(int));
+            var beginOffset = 0;
+            var id = System.Text.Encoding.UTF8.GetBytes(packet.PaketId);
+            var bx = BitConverter.GetBytes(packet.Position.X);
+            var by = BitConverter.GetBytes(packet.Position.Y);
+            var bz = BitConverter.GetBytes(packet.Position.Z);
+            var bRadY = BitConverter.GetBytes(packet.RadY);
+            var bQx = BitConverter.GetBytes(packet.NeckRotation.X);
+            var bQy = BitConverter.GetBytes(packet.NeckRotation.Y);
+            var bQz = BitConverter.GetBytes(packet.NeckRotation.Z);
+            var bQw = BitConverter.GetBytes(packet.NeckRotation.W);
+            buff[16] = (byte)id.Length;
+            Buffer.BlockCopy(id, 0, buff, 16 + 1, id.Length);
+            Buffer.BlockCopy(bx, 0, buff, 32, sizeof(float));
+            Buffer.BlockCopy(by, 0, buff, 32 + sizeof(float), sizeof(float));
+            Buffer.BlockCopy(bz, 0, buff, 32 + sizeof(float)*2, sizeof(float));
+            Buffer.BlockCopy(bRadY, 0, buff, 32 + sizeof(float)*3, sizeof(float));
+            Buffer.BlockCopy(bQx, 0, buff, 48, sizeof(float));
+            Buffer.BlockCopy(bQy, 0, buff, 48 + sizeof(float), sizeof(float));
+            Buffer.BlockCopy(bQz, 0, buff, 48 + sizeof(float)*2, sizeof(float));
+            Buffer.BlockCopy(bQw, 0, buff, 48 + sizeof(float)*3, sizeof(float));
+            return buff;
+        }
 
         public static byte[] PacketsToBuffer(List<MinimumAvatarPacket> packets)
         {

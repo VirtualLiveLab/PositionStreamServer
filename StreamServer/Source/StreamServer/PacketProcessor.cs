@@ -5,7 +5,7 @@ using StreamServer.Data;
 
 namespace StreamServer
 {
-    public static class ProcessPacket
+    public static class PacketProcessor
     {
         public static async Task Process(UdpReceiveResult res)
         {

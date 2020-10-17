@@ -49,7 +49,7 @@ namespace StreamServer
                         {
                             UdpReceiveResult res;
                             res = await udp.ReceiveAsync();
-                            ProcessPacket.Process(res);
+                            PacketProcessor.Process(res);
                         } catch (SocketException e)
                         {
                             if (e.ErrorCode != 10054) //Client Disconnected.

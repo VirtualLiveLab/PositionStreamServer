@@ -51,11 +51,8 @@ namespace StreamServer
                                 user.Value.IsConnected = false;
                             }
                         }
-                        if (packet != null)
-                        {
-                            packets.Add(packet);
-                            users.Add(user.Value);
-                        }
+                        if (user.Value.IsConnected) users.Add(user.Value);
+                        if (packet != null) packets.Add(packet);
                     }
                     var buffs = Utility.PacketsToBuffers(packets);
                     foreach (var user in users)
