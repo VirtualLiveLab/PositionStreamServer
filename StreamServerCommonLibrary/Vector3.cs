@@ -1,18 +1,16 @@
-﻿namespace StreamServer.Data
+﻿namespace CommonLibrary
 {
-    public readonly struct Vector4
+    public readonly struct Vector3
     {
         public readonly float X;
         public readonly float Y;
         public readonly float Z;
-        public readonly float W;
 
-        public Vector4(float x, float y, float z, float w)
+        public Vector3(float x, float y, float z)
         {
             X = x;
             Y = y;
             Z = z;
-            W = w;
         }
     }
 }

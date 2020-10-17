@@ -1,6 +1,4 @@
-﻿using StreamServer.Data;
-
-namespace StreamServer.Data
+﻿namespace CommonLibrary
 {
     public class MinimumAvatarPacket
     {

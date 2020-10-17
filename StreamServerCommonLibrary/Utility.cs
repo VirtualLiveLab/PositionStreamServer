@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using StreamServer.Data;
 
-namespace StreamServer
+namespace CommonLibrary
 {
     public class Utility
     {

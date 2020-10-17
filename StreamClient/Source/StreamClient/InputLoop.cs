@@ -5,9 +5,8 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonLibrary;
-using StreamServer.Data;
 
-namespace StreamServer
+namespace StreamClient
 {
     /**
      * UDP packet receiving class.
@@ -52,8 +51,6 @@ namespace StreamServer
                         {
                             UdpReceiveResult res;
                             res = await udp.ReceiveAsync();
-                            var process = PacketProcessor.Process(res);
-                            tasks.Add(process);
                         } catch (SocketException e)
                         {
                             if (e.ErrorCode != 10054) //Client Disconnected.

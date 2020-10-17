@@ -6,9 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    </PropertyGroup>
+    <ItemGroup>
+      <Folder Include="Source" />
+    </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\StreamServerCommonLibrary\StreamServerCommonLibrary.csproj" />
