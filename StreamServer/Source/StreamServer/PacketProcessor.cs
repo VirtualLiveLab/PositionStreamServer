@@ -25,7 +25,6 @@ namespace StreamServer
                         : users[packet.PaketId] = new User(packet.PaketId);
                     if (!user.IsConnected)
                     {
-                        user.IsConnected = true;
                         Utility.PrintDbg($"Connected: [{user.UserId}] " +
                                          $"({res.RemoteEndPoint.Address}: {res.RemoteEndPoint.Port})");
                     }
@@ -34,6 +33,7 @@ namespace StreamServer
 
                     user.CurrentPacket = packet;
                     user.DateTimeBox = new DateTimeBox(DateTime.Now);
+                    user.IsConnected = true;
                     users[packet.PaketId] = user;
                 });
             }

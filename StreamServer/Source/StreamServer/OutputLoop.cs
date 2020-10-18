@@ -39,25 +39,28 @@ namespace StreamServer
                     var delay = Task.Delay(interval, token);
                     List<MinimumAvatarPacket> packets = new List<MinimumAvatarPacket>();
                     List<User> users = new List<User>();
-                    foreach (var user in ModelManager.Instance.Users)
+                    foreach (var kvp in ModelManager.Instance.Users)
                     {
-                        MinimumAvatarPacket? packet;
+                        if(kvp.Value == null) continue;
+                        var user = kvp.Value;
+                        MinimumAvatarPacket? packet = user.CurrentPacket;
                         {
-                            packet = user.Value.CurrentPacket;
-                            if (user.Value.IsConnected && packet != null && DateTime.Now - user.Value.DateTimeBox!.LastUpdated > new TimeSpan(0, 0, 2))
+                            if (user.IsConnected && packet != null && DateTime.Now - user.DateTimeBox!.LastUpdated > new TimeSpan(0, 0, 2))
                             {
-                                Utility.PrintDbg($"Disconnected: [{user.Value.UserId}] " +
-                                         $"({user.Value.RemoteEndPoint!.Address}: {user.Value.RemoteEndPoint.Port})");
-                                user.Value.CurrentPacket = packet = null;
-                                user.Value.IsConnected = false;
+                                Utility.PrintDbg($"Disconnected: [{user.UserId}] " +
+                                         $"({user.RemoteEndPoint!.Address}: {user.RemoteEndPoint.Port})");
+                                user.CurrentPacket = packet = null;
+                                user.IsConnected = false;
                             }
                         }
-                        if (user.Value.IsConnected) users.Add(user.Value);
+                        if (user.IsConnected) users.Add(user);
                         if (packet != null) packets.Add(packet);
                     }
                     List<Task> tasks = new List<Task>();
                     foreach (var user in users)
                     {
+                        if (packets.Count > 100)
+                            packets = packets.GetRange(0, 100);
                         tasks.Add(PacketSender.Send(packets, user, udp));
                     }
                     token.ThrowIfCancellationRequested();

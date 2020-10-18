@@ -8,9 +8,6 @@ namespace StreamServer
     {
         static void Main(string[] args)
         {
-            ModelManager.Instance.Users["kai101"] = new User("kai101");
-            ModelManager.Instance.Users["user2"] = new User("user2");
-            ModelManager.Instance.Users["user3"] = new User("user3");
             UdpClient udpClient = new UdpClient(5577);
             var input = new InputLoop(udpClient, 2);
             var output = new OutputLoop(udpClient, 33);
@@ -19,7 +16,7 @@ namespace StreamServer
             while (true)
             {
                 var line = Console.ReadLine();
-                if (line == "exit()")
+                if (line == "exit!")
                 {
                     input.cts.Cancel();
                     output.cts.Cancel();
