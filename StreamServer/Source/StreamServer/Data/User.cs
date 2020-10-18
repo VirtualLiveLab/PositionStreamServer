@@ -16,5 +16,13 @@ namespace StreamServer.Data
         {
             UserId = userId;
         }
+
+        public User(User instance)
+        {
+            UserId = instance.UserId;
+            IsConnected = instance.IsConnected;
+            RemoteEndPoint = instance.RemoteEndPoint;
+            DateTimeBox = instance.DateTimeBox;
+        }
     }
 }

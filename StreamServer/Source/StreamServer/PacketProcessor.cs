@@ -19,10 +19,12 @@ namespace StreamServer
                     if (!ValidatePacket(optPacket)) return;
                     var packet = optPacket!;
                     var users = ModelManager.Instance.Users;
-                    
-                    var user = users.ContainsKey(packet.PaketId)
-                        ? users[packet.PaketId]
+
+                    var user = users.ContainsKey(packet.PaketId) && users[packet.PaketId].IsConnected
+                        ? users[packet.PaketId] = new User(users[packet.PaketId])
                         : users[packet.PaketId] = new User(packet.PaketId);
+
+
                     if (!user.IsConnected)
                     {
                         Utility.PrintDbg($"Connected: [{user.UserId}] " +

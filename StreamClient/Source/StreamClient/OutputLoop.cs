@@ -14,12 +14,14 @@ namespace StreamClient
         private readonly UdpClient udp;
         private readonly int interval;
         private readonly string name;
+        private readonly Vector3 _position;
 
-        public OutputLoop(UdpClient udpClient, int interval, string name)
+        public OutputLoop(UdpClient udpClient, int interval, string name, Vector3 position)
         {
             udp = udpClient;
             this.interval = interval;
             this.name = name;
+            _position = position;
         }
         
         public void Start()
@@ -39,7 +41,7 @@ namespace StreamClient
                     var tasks = new List<Task>();
                     var delay = Task.Delay(interval, token);
                     tasks.Add(delay);
-                    var packet = new MinimumAvatarPacket(name, new Vector3(), 0.0f, new Vector4());
+                    var packet = new MinimumAvatarPacket(name, _position, 0.0f, new Vector4());
                     var buf = Utility.PacketToBuffer(packet);
                     token.ThrowIfCancellationRequested();
                     tasks.Add(udp.SendAsync(buf, buf.Length));

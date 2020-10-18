@@ -59,9 +59,7 @@ namespace StreamServer
                     List<Task> tasks = new List<Task>();
                     foreach (var user in users)
                     {
-                        if (packets.Count > 100)
-                            packets = packets.GetRange(0, 100);
-                        tasks.Add(PacketSender.Send(packets, user, udp));
+                        tasks.Add(PacketSender.Send(user, packets, udp));
                     }
                     token.ThrowIfCancellationRequested();
                     tasks.Add(delay);

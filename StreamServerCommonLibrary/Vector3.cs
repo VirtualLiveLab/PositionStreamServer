@@ -12,5 +12,14 @@
             Y = y;
             Z = z;
         }
+
+        public static float Square(Vector3 lhs, Vector3 rhs)
+        {
+            var diffX = lhs.X - rhs.X;
+            var diffY = lhs.Y - rhs.Y;
+            var diffZ = lhs.Z - rhs.Z;
+
+            return diffX * diffX + diffY * diffY + diffZ * diffZ;
+        }
     }
 }
