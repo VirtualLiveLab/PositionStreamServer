@@ -32,7 +32,15 @@ namespace StreamServer
                 {
                     tasks.Add(udp.SendAsync(buf, buf.Length, user.RemoteEndPoint));
                 }
-                await Task.WhenAll(tasks);
+
+                try
+                {
+                    await Task.WhenAll(tasks);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             });
         }
     }
