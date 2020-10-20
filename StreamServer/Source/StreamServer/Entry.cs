@@ -13,8 +13,10 @@ namespace StreamServer
             UdpClient udpClient = new UdpClient(5577);
             var input = new InputLoop(udpClient, 2);
             var output = new OutputLoop(udpClient, 33);
+            var statusCheck = new StatusCheckLoop(1000);
             input.Start();
             output.Start();
+            statusCheck.Run();
             while (true)
             {
                 var line = Console.ReadLine();

@@ -45,12 +45,13 @@ namespace StreamServer
                         var user = kvp.Value;
                         MinimumAvatarPacket? packet = user.CurrentPacket;
                         {
-                            if (user.IsConnected && packet != null && DateTime.Now - user.DateTimeBox!.LastUpdated > new TimeSpan(0, 0, 2))
+                            if (user.IsConnected && packet != null && DateTime.Now - user.DateTimeBox!.LastUpdated > new TimeSpan(0, 0, 1))
                             {
                                 Utility.PrintDbg($"Disconnected: [{user.UserId}] " +
                                          $"({user.RemoteEndPoint!.Address}: {user.RemoteEndPoint.Port})");
                                 user.CurrentPacket = packet = null;
                                 user.IsConnected = false;
+                                ModelManager.Instance.Users.TryRemove(kvp.Key, out var dummy);
                             }
                         }
                         if (user.IsConnected) users.Add(user);

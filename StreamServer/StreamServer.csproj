@@ -11,6 +11,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\LoopLibrary\LoopLibrary.csproj" />
       <ProjectReference Include="..\StreamServerCommonLibrary\StreamServerCommonLibrary.csproj" />
     </ItemGroup>
 
