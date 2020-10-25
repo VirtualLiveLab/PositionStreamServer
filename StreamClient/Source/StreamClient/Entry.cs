@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 using CommonLibrary;
 
 namespace StreamClient
 {
     public class Entry
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            var str = Console.ReadLine();
+            var str = args.Length > 0 ? args[0] : Console.ReadLine();
             var k = Int32.Parse(str);
             var ctsList = new List<CancellationTokenSource>();
             for (int i = k; i < 200 + k; ++i)
@@ -23,6 +24,7 @@ namespace StreamClient
             }
             while (true)
             {
+                await Task.Delay(100);
                 var line = Console.ReadLine();
                 if (line == "exit!")
                 {
