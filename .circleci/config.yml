@@ -10,7 +10,7 @@ jobs:
             - checkout
             - run: cd /temp/StreamServer.Test && dotnet test
 orbs:
-    gcp-gcr: circleci/gcp-gcr@0.8.0
+    gcp-gcr: circleci/gcp-gcr@0.9.0
 version: 2.1
 workflows:
     build_and_push_image:
@@ -18,5 +18,11 @@ workflows:
             - test
             - gcp-gcr/build-and-push-image:
                 image: streamserver
+                dockerfile: StreamServer/Dockerfile
+                registry-url: asia.gcr.io
+                tag: ${CIRCLE_SHA1}
+            - gcp-gcr/build-and-push-image:
+                image: streamclient
+                dockerfile: StreamClient/Dockerfile
                 registry-url: asia.gcr.io
                 tag: ${CIRCLE_SHA1}
