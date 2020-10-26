@@ -5,45 +5,39 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonLibrary;
+using EventServerCore;
+using LoopLibrary;
 
 namespace StreamClient
 {
-    public class OutputLoop
+    public class OutputLoop : BaseLoop<Unit>
     {
-        public readonly CancellationTokenSource cts = new CancellationTokenSource();
         private readonly UdpClient udp;
-        private readonly int interval;
-        private readonly string name;
         private readonly Vector3 _position;
 
         public OutputLoop(UdpClient udpClient, int interval, string name, Vector3 position)
+            : base(interval, name)
         {
             udp = udpClient;
-            this.interval = interval;
-            this.name = name;
             _position = position;
         }
-        
-        public void Start()
+
+        protected override void Start()
         {
             var localEndPoint = udp.Client.LocalEndPoint as IPEndPoint;
             var remoteEndPoint = udp.Client.RemoteEndPoint as IPEndPoint;
-            Utility.PrintDbg($"localhost: [{localEndPoint!.Port}] -> {remoteEndPoint!.Address}: [{remoteEndPoint.Port}]", name);
-            Task.Run(() => Loop(cts.Token), cts.Token);
+            Utility.PrintDbg($"localhost: [{localEndPoint!.Port}] -> {remoteEndPoint!.Address}: [{remoteEndPoint.Port}]", Name);
         }
 
-        private async Task Loop(CancellationToken token)
+        protected override async Task Update(int count)
         {
             try
             {
                 while (true)
                 {
                     var tasks = new List<Task>();
-                    var delay = Task.Delay(interval, token);
-                    tasks.Add(delay);
-                    var packet = new MinimumAvatarPacket(name, _position, 0.0f, new Vector4());
+                    var packet = new MinimumAvatarPacket(Name, _position, 0.0f, new Vector4());
                     var buf = Utility.PacketToBuffer(packet);
-                    token.ThrowIfCancellationRequested();
                     tasks.Add(udp.SendAsync(buf, buf.Length));
                     await Task.WhenAll(tasks);
                 }

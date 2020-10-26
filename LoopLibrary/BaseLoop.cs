@@ -21,6 +21,7 @@ namespace LoopLibrary
 
         public Task<Result<T>> Run()
         {
+            Start();
             return Task.Run(() => Loop(_cts.Token), _cts.Token);
         }
 
@@ -54,6 +55,8 @@ namespace LoopLibrary
                 return new Result<T>(false);
             }
         }
+
+        protected virtual void Start(){}
 
         protected abstract Task Update(int count);
 
