@@ -20,7 +20,7 @@ namespace CommonLibrary
             return sb.ToString();
         }
         
-        public static MinimumAvatarPacket? BufferToPacket(byte[] buf)
+        public static MinimumAvatarPacket BufferToPacket(byte[] buf)
         {
             if (buf == null || buf.Length != 64) return null;
             var idLen = buf[16];
@@ -39,7 +39,7 @@ namespace CommonLibrary
             return packet;
         }
         
-        public static List<MinimumAvatarPacket>? BufferToPackets(byte[] buf)
+        public static List<MinimumAvatarPacket> BufferToPackets(byte[] buf)
         {
             if (buf != null && buf.Length > 0)
             {
@@ -148,7 +148,7 @@ namespace CommonLibrary
             return buffersList;
         }
         
-        public static void PrintDbg<T>(T str, object? sender = null)
+        public static void PrintDbg<T>(T str, object sender = null)
         {
             Console.WriteLine($"[{sender}] {str}");
         }
