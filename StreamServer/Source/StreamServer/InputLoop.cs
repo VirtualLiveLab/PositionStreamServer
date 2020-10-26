@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
-using CommonLibrary;
+using DebugPrintLibrary;
 using EventServerCore;
 using LoopLibrary;
-using StreamServer.Data;
 
 namespace StreamServer
 {
@@ -31,7 +28,7 @@ namespace StreamServer
         protected override void Start()
         {
             IPEndPoint localEndPoint = (IPEndPoint)udp.Client.LocalEndPoint;
-            Utility.PrintDbg($"Any -> localhost: [{localEndPoint?.Port}]");
+            Printer.PrintDbg($"Any -> localhost: [{localEndPoint?.Port}]");
         }
 
         protected override async Task Update(int count)
@@ -48,7 +45,7 @@ namespace StreamServer
                 } catch (SocketException e)
                 {
                     if (e.ErrorCode != 10054) //Client Disconnected.
-                        Utility.PrintDbg(e, Name);
+                        Printer.PrintDbg(e, Name);
                 }
             }
             await Task.WhenAll(tasks);

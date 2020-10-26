@@ -147,10 +147,5 @@ namespace CommonLibrary
             }
             return buffersList;
         }
-        
-        public static void PrintDbg<T>(T str, object sender = null)
-        {
-            Console.WriteLine($"[{sender}] {str}");
-        }
     }
 }

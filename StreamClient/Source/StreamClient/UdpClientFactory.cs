@@ -14,7 +14,7 @@ namespace StreamClient
                 //--Automatically bind to an available port by binding to port 0.
                 udpClient.Client.Bind(new IPEndPoint(IPAddress.Parse("0.0.0.0"), 0));
             }
-            catch (SocketException e)
+            catch (SocketException)
             {
                 //--Binding to port 0 throws SocketException.
                 //Debug.Log(e);

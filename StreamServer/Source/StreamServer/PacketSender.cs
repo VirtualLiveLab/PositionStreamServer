@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using CommonLibrary;
+using DebugPrintLibrary;
 using StreamServer.Data;
 
 namespace StreamServer
@@ -39,7 +39,7 @@ namespace StreamServer
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Printer.PrintDbg(e);
                 }
             });
         }

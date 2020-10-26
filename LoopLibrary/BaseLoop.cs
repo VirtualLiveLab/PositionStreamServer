@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using DebugPrintLibrary;
 using EventServerCore;
 
 namespace LoopLibrary
@@ -46,12 +47,12 @@ namespace LoopLibrary
             }
             catch (OperationCompletedException<Result<T>> e)
             {
-                Console.WriteLine("Loop completed");
+                Printer.PrintDbg("Loop completed");
                 return e.Result;
             }
             catch (Exception e)
             {
-                Console.WriteLine($"[{Name}] Exception on loop\n" + e);
+                Printer.PrintDbg($"[{Name}] Exception on loop\n" + e);
                 return new Result<T>(false);
             }
         }
@@ -62,7 +63,7 @@ namespace LoopLibrary
 
         protected virtual void OnCancel()
         {
-            Console.WriteLine($"[{Name}] Loop canceled");
+            Printer.PrintDbg($"[{Name}] Loop canceled");
         }
 
         public void Done(T result)

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using DebugPrintLibrary;
 using EventServerCore;
 using LoopLibrary;
 
@@ -14,7 +14,7 @@ namespace StreamServer
 
         protected override async Task Update(int count)
         {
-            Console.WriteLine($"Num clients: {ModelManager.Instance.Users.Count}");
+            Printer.PrintDbg($"Num clients: {ModelManager.Instance.Users.Count}");
         }
     }
 }

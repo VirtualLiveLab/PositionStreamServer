@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using CommonLibrary;
+using DebugPrintLibrary;
 using StreamServer.Data;
 
 namespace StreamServer
@@ -27,7 +28,7 @@ namespace StreamServer
 
                     if (!user.IsConnected)
                     {
-                        Utility.PrintDbg($"Connected: [{user.UserId}] " +
+                        Printer.PrintDbg($"Connected: [{user.UserId}] " +
                                          $"({res.RemoteEndPoint.Address}: {res.RemoteEndPoint.Port})");
                     }
                     
@@ -41,7 +42,7 @@ namespace StreamServer
             }
             catch (Exception e)
             {
-                Utility.PrintDbg(e);
+                Printer.PrintDbg(e);
             }
         }
 

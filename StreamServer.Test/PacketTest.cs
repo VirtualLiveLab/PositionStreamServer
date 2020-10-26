@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using CommonLibrary;
-using StreamServer.Data;
 using Xunit;
 
 namespace StreamServer.Test

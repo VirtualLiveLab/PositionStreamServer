@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
-using System.Threading.Tasks;
 using CommonLibrary;
+using DebugPrintLibrary;
 
 namespace StreamClient
 {
@@ -13,7 +13,7 @@ namespace StreamClient
         {
             var str = args.Length > 0 ? args[0] : Console.ReadLine();
             var ipaddr = args.Length > 1 ? args[1] : "127.0.0.1";
-            Console.WriteLine(ipaddr);
+            Printer.PrintDbg(ipaddr);
             var k = Int32.Parse(str);
             var ctsList = new List<CancellationTokenSource>();
             for (int i = k; i < 1000 + k; ++i)
@@ -34,7 +34,7 @@ namespace StreamClient
                     {
                         cts.Cancel();
                     }
-                    Console.WriteLine("Application gracefully shutdown. Bye!");
+                    Printer.PrintDbg("Application gracefully shutdown. Bye!");
                     Thread.Sleep(100);
                     break;
                 }

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
-using CommonLibrary;
-using StreamServer.Data;
+using DebugPrintLibrary;
 
 namespace StreamServer
 {
@@ -26,7 +24,7 @@ namespace StreamServer
                 {
                     input.Cts.Cancel();
                     output.Cts.Cancel();
-                    Console.WriteLine("Application gracefully shutdown. Bye!");
+                    Printer.PrintDbg("Application gracefully shutdown. Bye!");
                     Thread.Sleep(100);
                     break;
                 }

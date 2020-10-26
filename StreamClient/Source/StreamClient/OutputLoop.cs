@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
 using CommonLibrary;
+using DebugPrintLibrary;
 using EventServerCore;
 using LoopLibrary;
 
@@ -26,7 +26,7 @@ namespace StreamClient
         {
             var localEndPoint = udp.Client.LocalEndPoint as IPEndPoint;
             var remoteEndPoint = udp.Client.RemoteEndPoint as IPEndPoint;
-            Utility.PrintDbg($"localhost: [{localEndPoint!.Port}] -> {remoteEndPoint!.Address}: [{remoteEndPoint.Port}]", Name);
+            Printer.PrintDbg($"localhost: [{localEndPoint!.Port}] -> {remoteEndPoint!.Address}: [{remoteEndPoint.Port}]", Name);
         }
 
         protected override async Task Update(int count)
@@ -41,7 +41,7 @@ namespace StreamClient
             }
             catch (OperationCanceledException)
             {
-                Console.WriteLine("Sender stopped");
+                Printer.PrintDbg("Sender stopped");
                 throw;
             }
         }
