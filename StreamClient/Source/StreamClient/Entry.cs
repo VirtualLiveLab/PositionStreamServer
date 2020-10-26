@@ -16,10 +16,10 @@ namespace StreamClient
             Console.WriteLine(ipaddr);
             var k = Int32.Parse(str);
             var ctsList = new List<CancellationTokenSource>();
-            for (int i = k; i < 200 + k; ++i)
+            for (int i = k; i < 1000 + k; ++i)
             {
                 UdpClient udpClient = UdpClientFactory.CreateClient(ipaddr , 5577);
-                var position = new Vector3(i%100*4, 0.5f, i/100*2);
+                var position = new Vector3(i%33*4, 0.5f, i/33*2);
                 var output = new OutputLoop(udpClient, 16, $"user{i}", position);
                 output.Run();
                 ctsList.Add(output.Cts);
