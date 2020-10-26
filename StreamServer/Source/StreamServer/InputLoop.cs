@@ -8,13 +8,6 @@ using LoopLibrary;
 
 namespace StreamServer
 {
-    /**
-     * UDP packet receiving class.
-     * Do not make multiple instance of this class,
-     * because that will break synchronization between
-     * Socket.Available() and Socket.ReadAsync().
-     * This class will be refactored to singleton.
-     */
     public class InputLoop : BaseLoop<Unit>
     {
         private readonly UdpClient udp;
