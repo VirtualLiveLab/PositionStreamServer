@@ -4,6 +4,8 @@
 
 3Dアバターの座標を多人数で共有するサーバー
 
+<img src="https://github.com/MIKUEC2020/PositionStreamServer/blob/master/ReadmeResources/UnityDemo.gif" width="320px">
+
 - 「体の座標」と「体のY軸周りの回転」と「頭の姿勢」を共有します。
 - 500人程度まで共有が可能です。
 
