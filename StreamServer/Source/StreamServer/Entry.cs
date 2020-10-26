@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Threading;
 using CommonLibrary;
 using StreamServer.Data;
 
@@ -14,17 +15,19 @@ namespace StreamServer
             var input = new InputLoop(udpClient, 2);
             var output = new OutputLoop(udpClient, 33);
             var statusCheck = new StatusCheckLoop(1000);
-            input.Start();
-            output.Start();
+            input.Run();
+            output.Run();
             statusCheck.Run();
             while (true)
             {
+                Thread.Sleep(100);
                 var line = Console.ReadLine();
                 if (line == "exit!")
                 {
-                    input.cts.Cancel();
-                    output.cts.Cancel();
+                    input.Cts.Cancel();
+                    output.Cts.Cancel();
                     Console.WriteLine("Application gracefully shutdown. Bye!");
+                    Thread.Sleep(100);
                     break;
                 }
             }

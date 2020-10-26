@@ -5,73 +5,56 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonLibrary;
+using EventServerCore;
+using LoopLibrary;
 using StreamServer.Data;
 
 namespace StreamServer
 {
-    public class OutputLoop
+    public class OutputLoop : BaseLoop<Unit>
     {
-        public readonly CancellationTokenSource cts = new CancellationTokenSource();
         private readonly UdpClient udp;
-        private readonly int interval;
-        private readonly string name;
 
         public OutputLoop(UdpClient udpClient, int interval, string name = "Output")
+            : base(interval, name)
         {
             udp = udpClient;
-            this.interval = interval;
-            this.name = name;
         }
         
-        public void Start()
+        protected override void Start()
         {
             var localEndPoint = udp.Client.LocalEndPoint as IPEndPoint;
             Utility.PrintDbg($"localhost: [{localEndPoint?.Port}] -> Any");
-            Task.Run(() => Loop(cts.Token), cts.Token);
         }
 
-        private async Task Loop(CancellationToken token)
+        protected override async Task Update(int count)
         {
-            try
+            List<MinimumAvatarPacket> packets = new List<MinimumAvatarPacket>();
+            List<User> users = new List<User>();
+            foreach (var kvp in ModelManager.Instance.Users)
             {
-                while (true)
+                if(kvp.Value == null) continue;
+                var user = kvp.Value;
+                MinimumAvatarPacket? packet = user.CurrentPacket;
                 {
-                    var delay = Task.Delay(interval, token);
-                    List<MinimumAvatarPacket> packets = new List<MinimumAvatarPacket>();
-                    List<User> users = new List<User>();
-                    foreach (var kvp in ModelManager.Instance.Users)
+                    if (user.IsConnected && packet != null && DateTime.Now - user.DateTimeBox!.LastUpdated > new TimeSpan(0, 0, 1))
                     {
-                        if(kvp.Value == null) continue;
-                        var user = kvp.Value;
-                        MinimumAvatarPacket? packet = user.CurrentPacket;
-                        {
-                            if (user.IsConnected && packet != null && DateTime.Now - user.DateTimeBox!.LastUpdated > new TimeSpan(0, 0, 1))
-                            {
-                                Utility.PrintDbg($"Disconnected: [{user.UserId}] " +
-                                         $"({user.RemoteEndPoint!.Address}: {user.RemoteEndPoint.Port})");
-                                user.CurrentPacket = packet = null;
-                                user.IsConnected = false;
-                                ModelManager.Instance.Users.TryRemove(kvp.Key, out var dummy);
-                            }
-                        }
-                        if (user.IsConnected) users.Add(user);
-                        if (packet != null) packets.Add(packet);
+                        Utility.PrintDbg($"Disconnected: [{user.UserId}] " +
+                                 $"({user.RemoteEndPoint!.Address}: {user.RemoteEndPoint.Port})");
+                        user.CurrentPacket = packet = null;
+                        user.IsConnected = false;
+                        ModelManager.Instance.Users.TryRemove(kvp.Key, out var dummy);
                     }
-                    List<Task> tasks = new List<Task>();
-                    foreach (var user in users)
-                    {
-                        tasks.Add(PacketSender.Send(user, packets, udp));
-                    }
-                    token.ThrowIfCancellationRequested();
-                    tasks.Add(delay);
-                    await Task.WhenAll(tasks);
                 }
+                if (user.IsConnected) users.Add(user);
+                if (packet != null) packets.Add(packet);
             }
-            catch (OperationCanceledException)
+            List<Task> tasks = new List<Task>();
+            foreach (var user in users)
             {
-                Console.WriteLine("Sender stopped");
-                throw;
+                tasks.Add(PacketSender.Send(user, packets, udp));
             }
+            await Task.WhenAll(tasks);
         }
     }
 }

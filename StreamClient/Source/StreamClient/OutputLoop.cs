@@ -33,14 +33,11 @@ namespace StreamClient
         {
             try
             {
-                while (true)
-                {
-                    var tasks = new List<Task>();
-                    var packet = new MinimumAvatarPacket(Name, _position, 0.0f, new Vector4());
-                    var buf = Utility.PacketToBuffer(packet);
-                    tasks.Add(udp.SendAsync(buf, buf.Length));
-                    await Task.WhenAll(tasks);
-                }
+                var tasks = new List<Task>();
+                var packet = new MinimumAvatarPacket(Name, _position, 0.0f, new Vector4());
+                var buf = Utility.PacketToBuffer(packet);
+                tasks.Add(udp.SendAsync(buf, buf.Length));
+                await Task.WhenAll(tasks);
             }
             catch (OperationCanceledException)
             {

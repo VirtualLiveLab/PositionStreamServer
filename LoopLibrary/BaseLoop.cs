@@ -41,7 +41,7 @@ namespace LoopLibrary
             }
             catch (OperationCanceledException)
             {
-                Console.WriteLine("Loop canceled");
+                OnCancel();
                 return new Result<T>(false);
             }
             catch (OperationCompletedException<Result<T>> e)
@@ -51,7 +51,7 @@ namespace LoopLibrary
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception on loop\n" + e);
+                Console.WriteLine($"[{Name}] Exception on loop\n" + e);
                 return new Result<T>(false);
             }
         }
@@ -59,6 +59,11 @@ namespace LoopLibrary
         protected virtual void Start(){}
 
         protected abstract Task Update(int count);
+
+        protected virtual void OnCancel()
+        {
+            Console.WriteLine($"[{Name}] Loop canceled");
+        }
 
         public void Done(T result)
         {

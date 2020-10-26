@@ -9,7 +9,7 @@ namespace StreamClient
 {
     public class Entry
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             var str = args.Length > 0 ? args[0] : Console.ReadLine();
             var ipaddr = args.Length > 1 ? args[1] : "127.0.0.1";
@@ -21,12 +21,12 @@ namespace StreamClient
                 UdpClient udpClient = UdpClientFactory.CreateClient(ipaddr , 5577);
                 var position = new Vector3(i%100*4, 0.5f, i/100*2);
                 var output = new OutputLoop(udpClient, 16, $"user{i}", position);
-                var _ = output.Run();
+                output.Run();
                 ctsList.Add(output.Cts);
             }
             while (true)
             {
-                await Task.Delay(100);
+                Thread.Sleep(100);
                 var line = Console.ReadLine();
                 if (line == "exit!")
                 {
@@ -35,6 +35,7 @@ namespace StreamClient
                         cts.Cancel();
                     }
                     Console.WriteLine("Application gracefully shutdown. Bye!");
+                    Thread.Sleep(100);
                     break;
                 }
             }

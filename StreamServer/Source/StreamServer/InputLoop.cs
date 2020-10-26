@@ -5,6 +5,8 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonLibrary;
+using EventServerCore;
+using LoopLibrary;
 using StreamServer.Data;
 
 namespace StreamServer
@@ -16,64 +18,40 @@ namespace StreamServer
      * Socket.Available() and Socket.ReadAsync().
      * This class will be refactored to singleton.
      */
-    public class InputLoop
+    public class InputLoop : BaseLoop<Unit>
     {
-        public readonly CancellationTokenSource cts = new CancellationTokenSource();
         private readonly UdpClient udp;
-        private readonly int interval;
-        private readonly string name;
 
         public InputLoop(UdpClient udpClient, int interval, string name = "Input")
+            : base(interval, name)
         {
             udp = udpClient;
-            this.interval = interval;
-            this.name = name;
         }
         
-        public void Start()
+        protected override void Start()
         {
             IPEndPoint localEndPoint = (IPEndPoint)udp.Client.LocalEndPoint;
             Utility.PrintDbg($"Any -> localhost: [{localEndPoint?.Port}]");
-            Task.Run(() => Loop(cts.Token), cts.Token);
         }
 
-        private async Task Loop(CancellationToken token)
+        protected override async Task Update(int count)
         {
-            try
+            var tasks = new List<Task>();
+            while (udp.Available > 0)
             {
-                while (true)
+                try
                 {
-                    var tasks = new List<Task>();
-                    var delay = Task.Delay(interval, token);
-                    tasks.Add(delay);
-                    while (udp.Available > 0)
-                    {
-                        try
-                        {
-                            UdpReceiveResult res;
-                            res = await udp.ReceiveAsync();
-                            var process = PacketProcessor.Process(res);
-                            tasks.Add(process);
-                        } catch (SocketException e)
-                        {
-                            if (e.ErrorCode != 10054) //Client Disconnected.
-                                Utility.PrintDbg(e);
-                        }
-                    }
-                    token.ThrowIfCancellationRequested();
-                    await Task.WhenAll(tasks);
+                    UdpReceiveResult res;
+                    res = await udp.ReceiveAsync();
+                    var process = PacketProcessor.Process(res);
+                    tasks.Add(process);
+                } catch (SocketException e)
+                {
+                    if (e.ErrorCode != 10054) //Client Disconnected.
+                        Utility.PrintDbg(e, Name);
                 }
             }
-            catch (OperationCanceledException)
-            {
-                Utility.PrintDbg("Receiver stopped");
-                throw;
-            }
-            catch (Exception e)
-            {
-                Utility.PrintDbg(e);
-                throw;
-            }
+            await Task.WhenAll(tasks);
         }
     }
 }
