@@ -9,7 +9,7 @@ namespace StreamServer.Test
         [Fact]
         public void PacketTest1()
         {
-            var packet = new MinimumAvatarPacket("packet1", new Vector3(2.2f, 5.2f, 6.8f), 50,
+            var packet = new MinimumAvatarPacket(1, new Vector3(2.2f, 5.2f, 6.8f), 50,
                 new Vector4(2.1f, 4.6f, 3.0f, 3.1f));
             var buff = Utility.PacketsToBuffer(new List<MinimumAvatarPacket> {packet});
             var decodedPacket = Utility.BufferToPackets(buff);
@@ -22,9 +22,9 @@ namespace StreamServer.Test
         [Fact]
         public void PacketTest2()
         {
-            var packet1 = new MinimumAvatarPacket("packet1", new Vector3(2.2f, 5.2f, 6.8f), 50,
+            var packet1 = new MinimumAvatarPacket(1, new Vector3(2.2f, 5.2f, 6.8f), 50,
                 new Vector4(2.1f, 4.6f, 3.0f, 3.1f));
-            var packet2 = new MinimumAvatarPacket("packet2", new Vector3(7.5f, 2.6f, 9.2f), 99,
+            var packet2 = new MinimumAvatarPacket(2, new Vector3(7.5f, 2.6f, 9.2f), 99,
                 new Vector4(1.4f, 9.8f, 6.4f, -1.4f));
             var buff = Utility.PacketsToBuffer(new List<MinimumAvatarPacket> {packet1, packet2});
             var decodedPacket = Utility.BufferToPackets(buff);
@@ -43,7 +43,7 @@ namespace StreamServer.Test
         [Fact]
         public void PacketTest3()
         {
-            var packet = new MinimumAvatarPacket("", new Vector3(), 0,
+            var packet = new MinimumAvatarPacket(3, new Vector3(), 0,
                 new Vector4());
             var buff = Utility.PacketsToBuffer(new List<MinimumAvatarPacket> {packet});
             var decodedPacket = Utility.BufferToPackets(buff);
@@ -59,7 +59,7 @@ namespace StreamServer.Test
             var packets = new List<MinimumAvatarPacket>();
             for (int i = 0; i < 100; ++i)
             {
-                var packet = new MinimumAvatarPacket($"packet{i}", new Vector3(2.2f, 5.2f, 6.8f), 50,
+                var packet = new MinimumAvatarPacket(i, new Vector3(2.2f, 5.2f, 6.8f), 50,
                     new Vector4(2.1f, 4.6f, 3.0f, 3.1f));
                 packets.Add(packet);
             }

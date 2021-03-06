@@ -15,8 +15,8 @@ namespace StreamServer
     {
         private readonly UdpClient udp;
 
-        public OutputLoop(UdpClient udpClient, int interval, string name = "Output")
-            : base(interval, name)
+        public OutputLoop(UdpClient udpClient, int interval, long id)
+            : base(interval, id)
         {
             udp = udpClient;
         }

@@ -12,8 +12,8 @@ namespace StreamServer
     {
         private readonly UdpClient udp;
 
-        public InputLoop(UdpClient udpClient, int interval, string name = "Input")
-            : base(interval, name)
+        public InputLoop(UdpClient udpClient, int interval, long id)
+            : base(interval, id)
         {
             udp = udpClient;
         }
@@ -38,7 +38,7 @@ namespace StreamServer
                 } catch (SocketException e)
                 {
                     if (e.ErrorCode != 10054) //Client Disconnected.
-                        Printer.PrintDbg(e, Name);
+                        Printer.PrintDbg(e, id);
                 }
             }
             await Task.WhenAll(tasks);

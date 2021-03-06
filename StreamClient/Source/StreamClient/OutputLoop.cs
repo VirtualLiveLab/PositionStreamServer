@@ -15,8 +15,8 @@ namespace StreamClient
         private readonly UdpClient udp;
         private readonly Vector3 _position;
 
-        public OutputLoop(UdpClient udpClient, int interval, string name, Vector3 position)
-            : base(interval, name)
+        public OutputLoop(UdpClient udpClient, int interval, long id, Vector3 position)
+            : base(interval, id)
         {
             udp = udpClient;
             _position = position;
@@ -26,7 +26,7 @@ namespace StreamClient
         {
             var localEndPoint = udp.Client.LocalEndPoint as IPEndPoint;
             var remoteEndPoint = udp.Client.RemoteEndPoint as IPEndPoint;
-            Printer.PrintDbg($"localhost: [{localEndPoint!.Port}] -> {remoteEndPoint!.Address}: [{remoteEndPoint.Port}]", Name);
+            Printer.PrintDbg($"localhost: [{localEndPoint!.Port}] -> {remoteEndPoint!.Address}: [{remoteEndPoint.Port}]", id);
         }
 
         protected override async Task Update(int count)
@@ -34,7 +34,7 @@ namespace StreamClient
             try
             {
                 var tasks = new List<Task>();
-                var packet = new MinimumAvatarPacket(Name, _position, 0.0f + count, new Vector4());
+                var packet = new MinimumAvatarPacket(id, _position, 0.0f + count, new Vector4());
                 var buf = Utility.PacketToBuffer(packet);
                 tasks.Add(udp.SendAsync(buf, buf.Length));
                 await Task.WhenAll(tasks);

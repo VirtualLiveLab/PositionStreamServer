@@ -8,16 +8,16 @@ namespace LoopLibrary
 {
     public abstract class BaseLoop<T>
     {
-        public readonly string Name;
+        public readonly long id;
         private readonly int _interval;
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
         private int _count;
         public CancellationTokenSource Cts => _cts;
 
-        protected BaseLoop(int interval, string name = "Input")
+        protected BaseLoop(int interval, long id = 1)
         {
             _interval = interval;
-            Name = name;
+            this.id = id;
         }
 
         public Task<Result<T>> Run()
@@ -52,7 +52,7 @@ namespace LoopLibrary
             }
             catch (Exception e)
             {
-                Printer.PrintDbg($"[{Name}] Exception on loop\n" + e);
+                Printer.PrintDbg($"[{id}] Exception on loop\n" + e);
                 return new Result<T>(false);
             }
         }
@@ -63,7 +63,7 @@ namespace LoopLibrary
 
         protected virtual void OnCancel()
         {
-            Printer.PrintDbg($"[{Name}] Loop canceled");
+            Printer.PrintDbg($"[{id}] Loop canceled");
         }
 
         public void Done(T result)
