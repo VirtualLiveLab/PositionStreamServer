@@ -11,7 +11,7 @@ namespace StreamServer
         {
             UdpClient udpClient = new UdpClient(5577);
             var input = new InputLoop(udpClient, 2, 1);
-            var output = new OutputLoop(udpClient, 33, 2);
+            var output = new OutputLoop(udpClient, 1000, 2);
             var statusCheck = new StatusCheckLoop(1000, 3);
             input.Run();
             output.Run();

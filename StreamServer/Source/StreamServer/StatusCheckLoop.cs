@@ -7,7 +7,7 @@ namespace StreamServer
 {
     public class StatusCheckLoop : BaseLoop<Unit>
     {
-        public StatusCheckLoop(int interval, long id)
+        public StatusCheckLoop(int interval, ulong id)
             : base(interval, id)
         {
         }

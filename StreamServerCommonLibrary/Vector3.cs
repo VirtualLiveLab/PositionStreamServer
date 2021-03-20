@@ -1,23 +1,26 @@
-﻿namespace CommonLibrary
+﻿using System;
+using System.ComponentModel.Design;
+
+namespace CommonLibrary
 {
     public readonly struct Vector3
     {
-        public readonly float X;
-        public readonly float Y;
-        public readonly float Z;
-
-        public Vector3(float x, float y, float z)
+        public readonly short x;
+        public readonly short y;
+        public readonly short z;
+        
+        public Vector3(short x, short y, short z)
         {
-            X = x;
-            Y = y;
-            Z = z;
+            this.x = x;
+            this.y = y;
+            this.z = z;
         }
 
         public static float Square(Vector3 lhs, Vector3 rhs)
         {
-            var diffX = lhs.X - rhs.X;
-            var diffY = lhs.Y - rhs.Y;
-            var diffZ = lhs.Z - rhs.Z;
+            var diffX = lhs.x - rhs.x;
+            var diffY = lhs.y - rhs.y;
+            var diffZ = lhs.z - rhs.z;
 
             return diffX * diffX + diffY * diffY + diffZ * diffZ;
         }

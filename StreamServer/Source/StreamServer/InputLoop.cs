@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace StreamServer
     {
         private readonly UdpClient udp;
 
-        public InputLoop(UdpClient udpClient, int interval, long id)
+        public InputLoop(UdpClient udpClient, int interval, ulong id)
             : base(interval, id)
         {
             udp = udpClient;

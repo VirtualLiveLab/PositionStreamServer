@@ -19,8 +19,8 @@ namespace StreamClient
             for (int i = k; i < 1000 + k; ++i)
             {
                 UdpClient udpClient = UdpClientFactory.CreateClient(ipaddr , 5577);
-                var position = new Vector3(i%33*4, 0.5f, i/33*2);
-                var output = new OutputLoop(udpClient, 16, i, position);
+                var position = new Vector3((short)(i%33*4), (short)0.5f, (short)(i/33*2));
+                var output = new OutputLoop(udpClient, 16, (ulong)i, position);
                 output.Run();
                 ctsList.Add(output.Cts);
             }

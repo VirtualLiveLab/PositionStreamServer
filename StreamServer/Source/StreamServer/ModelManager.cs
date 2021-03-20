@@ -9,6 +9,6 @@ namespace StreamServer
         private static ModelManager? _instance;
         public static ModelManager Instance => _instance ??= new ModelManager();
         
-        public readonly ConcurrentDictionary<long, User> Users = new ConcurrentDictionary<long, User>();
+        public readonly ConcurrentDictionary<ulong, User> Users = new ConcurrentDictionary<ulong, User>();
     }
 }

@@ -15,7 +15,7 @@ namespace StreamClient
         private readonly UdpClient udp;
         private readonly Vector3 _position;
 
-        public OutputLoop(UdpClient udpClient, int interval, long id, Vector3 position)
+        public OutputLoop(UdpClient udpClient, int interval, ulong id, Vector3 position)
             : base(interval, id)
         {
             udp = udpClient;
@@ -34,7 +34,7 @@ namespace StreamClient
             try
             {
                 var tasks = new List<Task>();
-                var packet = new MinimumAvatarPacket(id, _position, 0.0f + count, new Vector4());
+                var packet = new MinimumAvatarPacket(id, _position, 0.0f + count, new Vector4(), 0);
                 var buf = Utility.PacketToBuffer(packet);
                 tasks.Add(udp.SendAsync(buf, buf.Length));
                 await Task.WhenAll(tasks);

@@ -6,13 +6,13 @@ namespace StreamServer.Data
 {
     public class User
     {
-        public readonly long UserId;
+        public readonly ulong UserId;
         public volatile bool IsConnected;
         public volatile MinimumAvatarPacket? CurrentPacket;
         public volatile IPEndPoint? RemoteEndPoint;
         public volatile DateTimeBox? DateTimeBox;
 
-        public User(long userId)
+        public User(ulong userId)
         {
             UserId = userId;
         }

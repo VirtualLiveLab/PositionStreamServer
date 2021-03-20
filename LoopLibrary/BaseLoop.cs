@@ -8,13 +8,13 @@ namespace LoopLibrary
 {
     public abstract class BaseLoop<T>
     {
-        public readonly long id;
+        public readonly ulong id;
         private readonly int _interval;
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
         private int _count;
         public CancellationTokenSource Cts => _cts;
 
-        protected BaseLoop(int interval, long id = 1)
+        protected BaseLoop(int interval, ulong id = 1)
         {
             _interval = interval;
             this.id = id;
