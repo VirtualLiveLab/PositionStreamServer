@@ -28,8 +28,8 @@ namespace StreamServer
 
                     if (!user.IsConnected)
                     {
-                        Printer.PrintDbg($"Connected: [{user.UserId}] " +
-                                         $"({res.RemoteEndPoint.Address}: {res.RemoteEndPoint.Port})");
+                        Printer.PrintDbg($"Connected: [{user.UserId.ToString()}] " +
+                                         $"({res.RemoteEndPoint.Address}: {res.RemoteEndPoint.Port.ToString()})");
                     }
                     
                     user.RemoteEndPoint = res.RemoteEndPoint;

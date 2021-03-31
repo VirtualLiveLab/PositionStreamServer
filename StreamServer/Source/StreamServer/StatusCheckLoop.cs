@@ -14,7 +14,7 @@ namespace StreamServer
 
         protected override async Task Update(int count)
         {
-            Printer.PrintDbg($"Num clients: {ModelManager.Instance.Users.Count}");
+            Printer.PrintDbg($"Num clients: {ModelManager.Instance.Users.Count.ToString()}");
         }
     }
 }
