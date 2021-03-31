@@ -9,21 +9,26 @@ using StreamServer.Data;
 
 namespace StreamServer
 {
-    public class PacketSender
+    public static class PacketSender
     {
         public static async Task Send(User user, List<MinimumAvatarPacket> packets, UdpClient udp)
         {
             await Task.Run(async () =>
             {
                 var packetCopy = packets.ToList();
-                var selfPosition = user.CurrentPacket.Position;
-                packetCopy.Sort((a, b) =>
+                if (user.CurrentPacket != null)
                 {
-                    var aSquare = Vector3.Square(a.Position, selfPosition);
-                    var bSquare = Vector3.Square(b.Position, selfPosition);
-                    var comp = aSquare < bSquare ? -1 : 1;
-                    return comp;
-                });
+                    var selfPosition = user.CurrentPacket.Position;
+                
+                    packetCopy.HeapSort((a, b) =>
+                    {
+                        var aSquare = Vector3.Square(a.Position, selfPosition);
+                        var bSquare = Vector3.Square(b.Position, selfPosition);
+                        var comp = aSquare < bSquare ? -1 : 1;
+                        return comp;
+                    });
+                }
+
                 if (packetCopy.Count > 100)
                     packetCopy = packetCopy.GetRange(0, 100);
                 var buffs = Utility.PacketsToBuffers(packetCopy);
