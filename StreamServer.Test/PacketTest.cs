@@ -1,17 +1,25 @@
 using System.Collections.Generic;
 using CommonLibrary;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace StreamServer.Test
 {
     public class PacketTest
     {
+        private readonly ITestOutputHelper _testOutputHelper;
+
+        public PacketTest(ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+        }
+
         [Fact]
         public void PacketTest1()
         {
-            var packet = new MinimumAvatarPacket(1, new Vector3((short)2.2f, (short)5.2f, (short)6.8f), 50,
-                new Vector4(2, 4, 3, 3), 0);
-            Assert.True(packet.CheckRange(),"packet.CheckRange()");
+            var packet = new MinimumAvatarPacket(1, new Vector3(2, 5, 6), 10,
+                new Vector4(2, 4, 3, 120), 0);
+            Assert.True(packet.CheckRange(), "packet.CheckRange()");
             var buff = Utility.PacketsToBuffer(new List<MinimumAvatarPacket> {packet});
             var decodedPacket = Utility.BufferToPackets(buff);
             Assert.Equal(packet.PaketId, decodedPacket![0].PaketId);
@@ -23,9 +31,9 @@ namespace StreamServer.Test
         [Fact]
         public void PacketTest2()
         {
-            var packet1 = new MinimumAvatarPacket(1, new Vector3((short)2.2f, (short)5.2f, (short)6.8f), 50,
+            var packet1 = new MinimumAvatarPacket(1, new Vector3((short) 2.2f, (short) 5.2f, (short) 6.8f), 50,
                 new Vector4(2, 4, 3, 3), 0);
-            var packet2 = new MinimumAvatarPacket(2, new Vector3((short)7.5f, (short)2.6f, (short)9.2f), 99,
+            var packet2 = new MinimumAvatarPacket(2, new Vector3((short) 7.5f, (short) 2.6f, (short) 9.2f), 99,
                 new Vector4(1, 9, 6, -1), 0);
             Assert.True(packet1.CheckRange() && packet2.CheckRange(), "packet1.CheckRange() && packet2.CheckRange()");
             var buff = Utility.PacketsToBuffer(new List<MinimumAvatarPacket> {packet1, packet2});
@@ -47,7 +55,7 @@ namespace StreamServer.Test
         {
             var packet = new MinimumAvatarPacket(3, new Vector3(), 0,
                 new Vector4(), 0);
-            Assert.True(packet.CheckRange(),"packet.CheckRange()");
+            Assert.True(packet.CheckRange(), "packet.CheckRange()");
             var buff = Utility.PacketsToBuffer(new List<MinimumAvatarPacket> {packet});
             var decodedPacket = Utility.BufferToPackets(buff);
             Assert.Equal(packet.PaketId, decodedPacket![0].PaketId);
@@ -62,14 +70,15 @@ namespace StreamServer.Test
             var packets = new List<MinimumAvatarPacket>();
             for (int i = 0; i < 100; ++i)
             {
-                var packet = new MinimumAvatarPacket((ulong)i, new Vector3((short)2.2f, (short)5.2f, (short)6.8f), 50,
+                var packet = new MinimumAvatarPacket((ulong) i, new Vector3((short) 2.2f, (short) 5.2f, (short) 6.8f),
+                    50,
                     new Vector4(2, 4, 3, 3), 0);
                 packets.Add(packet);
-                Assert.True(packet.CheckRange(),$"packet.CheckRange({i})");
+                Assert.True(packet.CheckRange(), $"packet.CheckRange({i})");
             }
 
             var buffs = Utility.PacketsToBuffers(packets);
-            
+
             const int nSize = 29;
             for (int i = 0; i < buffs.Count; ++i)
             {

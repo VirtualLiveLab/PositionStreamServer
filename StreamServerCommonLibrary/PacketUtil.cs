@@ -45,10 +45,14 @@ namespace CommonLibrary
         /// <param name="value"></param>
         /// <returns></returns>
         public static byte ConvertByte(int value)
-        { 
-            if (Math.Abs(value) > 127) { throw new MinimumAvatarPacketCreativeException("the value must be less than or equal to 127 in absolute value.");}
+        {
+            if (Math.Abs(value) > 127)
+            {
+                throw new MinimumAvatarPacketCreativeException(
+                    "the value must be less than or equal to 127 in absolute value.");
+            }
+
             var h = value >= 0 ? 0 : 1; //符号 
-            value = Math.Abs(value) & 1111111; //And演算
             var s = toBinary(value);
             var str = h.ToString() + s.PadLeft(7, '0');
             byte buf = Convert.ToByte(str, 2);
@@ -61,7 +65,7 @@ namespace CommonLibrary
         /// <param name="buf"></param>
         /// <returns></returns>
         public static int ConvertInt(byte buf)
-        { 
+        {
             var body = Convert.ToString(buf, 2).PadLeft(8, '0');
             var c = int.Parse(body.First().ToString());
             var c1 = toInt(body);

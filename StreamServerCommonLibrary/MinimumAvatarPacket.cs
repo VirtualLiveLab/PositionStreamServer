@@ -55,7 +55,7 @@ namespace CommonLibrary
             var neckY = this.NeckRotation.y;
             var neckZ = this.NeckRotation.z;
             var neckW = this.NeckRotation.w;
-            return Math.Abs(radY) > 127 || Math.Abs(neckX) > 127 || Math.Abs(neckY) > 127 || Math.Abs(neckZ) > 127 || Math.Abs(neckW) > 127;
+            return Math.Abs(radY) < 128 && Math.Abs(neckX) < 128 && Math.Abs(neckY) < 128 && Math.Abs(neckZ) < 128 && Math.Abs(neckW) < 128;
         }
     }
 }
