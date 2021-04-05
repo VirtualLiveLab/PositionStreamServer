@@ -1,10 +1,7 @@
-﻿// 
-// 
-// 
-
-using System;
+﻿using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
+using CommonLibrary.Exception;
 
 namespace CommonLibrary
 {
@@ -42,18 +39,18 @@ namespace CommonLibrary
 
 
         /// <summary>
-        /// 整数値を1byteに変換する
+        /// float値を1byteに変換する
         /// Range : 127 ～ -127
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static byte ConvertByte(float value)
-        {
-            var v = (int) value;
-            var h = v >= 0 ? 0 : 1; //符号 
-            v = Math.Abs(v) & 1111111; //And演算
-            var s = toBinary(v);
-            var str = h + s.PadLeft(7, '0');
+        public static byte ConvertByte(int value)
+        { 
+            if (Math.Abs(value) > 127) { throw new MinimumAvatarPacketCreativeException("the value must be less than or equal to 127 in absolute value.");}
+            var h = value >= 0 ? 0 : 1; //符号 
+            value = Math.Abs(value) & 1111111; //And演算
+            var s = toBinary(value);
+            var str = h.ToString() + s.PadLeft(7, '0');
             byte buf = Convert.ToByte(str, 2);
             return buf;
         }
@@ -64,7 +61,7 @@ namespace CommonLibrary
         /// <param name="buf"></param>
         /// <returns></returns>
         public static int ConvertInt(byte buf)
-        {
+        { 
             var body = Convert.ToString(buf, 2).PadLeft(8, '0');
             var c = int.Parse(body.First().ToString());
             var c1 = toInt(body);
