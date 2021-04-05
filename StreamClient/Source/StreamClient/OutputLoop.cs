@@ -35,7 +35,7 @@ namespace StreamClient
             try
             {
                 var tasks = new List<Task>();
-                var packet = new MinimumAvatarPacket(id, _position, 0 + count, new Vector4(), 0);
+                var packet = new MinimumAvatarPacket(id, _position, (0 + count) % 127, new Vector4(), 0);
                 if (!packet.CheckRange())
                 {
                     throw new MinimumAvatarPacketCreativeException("the value must be less than or equal to 127 in absolute value.");
