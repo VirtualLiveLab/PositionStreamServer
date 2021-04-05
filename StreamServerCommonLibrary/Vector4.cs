@@ -2,12 +2,12 @@
 {
     public readonly struct Vector4
     {
-        public readonly float x;
-        public readonly float y;
-        public readonly float z;
-        public readonly float w;
+        public readonly int x;
+        public readonly int y;
+        public readonly int z;
+        public readonly int w;
 
-        public Vector4(float x, float y, float z, float w)
+        public Vector4(int x, int y, int z, int w)
         {
             this.x = x;
             this.y = y;

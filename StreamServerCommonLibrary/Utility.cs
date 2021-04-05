@@ -38,8 +38,10 @@ namespace CommonLibrary
             var qw = PacketUtil.ConvertInt(buf[offset + 4]);
             var time = BitConverter.ToDouble(buf, offset + 5);
             MinimumAvatarPacket packet =
-                new MinimumAvatarPacket(userId, new Vector3(x, y, z), radY, new Vector4(qx, qy, qz, qw), time);
-            return packet;
+                new MinimumAvatarPacket(userId, new Vector3(x, y, z), radY,
+                    new Vector4(qx, qy, qz, qw), time);
+            if (packet.CheckRange()) return packet;
+            else return null;
         }
 
         public static List<MinimumAvatarPacket> BufferToPackets(byte[] buf)
@@ -66,9 +68,10 @@ namespace CommonLibrary
                         var qz = PacketUtil.ConvertInt(buf[offset + 3]);
                         var qw = PacketUtil.ConvertInt(buf[offset + 4]);
                         var time = BitConverter.ToDouble(buf, offset + 5);
-                        MinimumAvatarPacket packet = new MinimumAvatarPacket(userId, new Vector3(x, y, z), radY,
+                        MinimumAvatarPacket packet = new MinimumAvatarPacket(userId, new Vector3(x, y, z),
+                            radY,
                             new Vector4(qx, qy, qz, qw), time);
-                        packets.Add(packet);
+                        if(packet.CheckRange()) packets.Add(packet);
                     }
 
                     return packets;
@@ -88,11 +91,11 @@ namespace CommonLibrary
             var bx = BitConverter.GetBytes(packet.Position.x);
             var by = BitConverter.GetBytes(packet.Position.y);
             var bz = BitConverter.GetBytes(packet.Position.z);
-            var bRadY = PacketUtil.ConvertByte((int) packet.RadY);
-            var bQx = PacketUtil.ConvertByte((int) packet.NeckRotation.x);
-            var bQy = PacketUtil.ConvertByte((int) packet.NeckRotation.y);
-            var bQz = PacketUtil.ConvertByte((int) packet.NeckRotation.z);
-            var bQw = PacketUtil.ConvertByte((int) packet.NeckRotation.w);
+            var bRadY = PacketUtil.ConvertByte(packet.RadY);
+            var bQx = PacketUtil.ConvertByte(packet.NeckRotation.x);
+            var bQy = PacketUtil.ConvertByte(packet.NeckRotation.y);
+            var bQz = PacketUtil.ConvertByte(packet.NeckRotation.z);
+            var bQw = PacketUtil.ConvertByte(packet.NeckRotation.w);
             var time = BitConverter.GetBytes(packet.time);
             byte[] body = {bRadY, bQx, bQy, bQz, bQw};
             Buffer.BlockCopy(id, 0, buff, 4, id.Length);
@@ -100,7 +103,7 @@ namespace CommonLibrary
             Buffer.BlockCopy(by, 0, buff, 14, by.Length);
             Buffer.BlockCopy(bz, 0, buff, 16, bz.Length);
             Buffer.BlockCopy(body, 0, buff, 18, body.Length);
-            Buffer.BlockCopy(time, 0, buff, 23 ,time.Length);
+            Buffer.BlockCopy(time, 0, buff, 23, time.Length);
             return buff;
         }
 
@@ -114,15 +117,15 @@ namespace CommonLibrary
             {
                 var packet = packets[i];
                 offset = 4 + i * 27;
-                var id = BitConverter.GetBytes(packet.PaketId); 
-                var bx = BitConverter.GetBytes(packet.Position.x); 
+                var id = BitConverter.GetBytes(packet.PaketId);
+                var bx = BitConverter.GetBytes(packet.Position.x);
                 var by = BitConverter.GetBytes(packet.Position.y);
                 var bz = BitConverter.GetBytes(packet.Position.z);
-                var bRadY = PacketUtil.ConvertByte((int) packet.RadY);
-                var bQx = PacketUtil.ConvertByte((int) packet.NeckRotation.x);
-                var bQy = PacketUtil.ConvertByte((int) packet.NeckRotation.y);
-                var bQz = PacketUtil.ConvertByte((int) packet.NeckRotation.z);
-                var bQw = PacketUtil.ConvertByte((int) packet.NeckRotation.w);
+                var bRadY = PacketUtil.ConvertByte(packet.RadY);
+                var bQx = PacketUtil.ConvertByte(packet.NeckRotation.x);
+                var bQy = PacketUtil.ConvertByte(packet.NeckRotation.y);
+                var bQz = PacketUtil.ConvertByte(packet.NeckRotation.z);
+                var bQw = PacketUtil.ConvertByte(packet.NeckRotation.w);
                 var time = BitConverter.GetBytes(packet.time);
                 byte[] body = {bRadY, bQx, bQy, bQz, bQw};
                 Buffer.BlockCopy(id, 0, buff, offset, id.Length);
@@ -153,6 +156,5 @@ namespace CommonLibrary
 
             return buffersList;
         }
-
     }
 }
