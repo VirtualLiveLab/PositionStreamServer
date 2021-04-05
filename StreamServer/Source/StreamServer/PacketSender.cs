@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using CommonLibrary;
+using CommonLibrary.ExtensionMethod;
 using DebugPrintLibrary;
 using StreamServer.Data;
 

@@ -1,4 +1,7 @@
-﻿namespace System.Collections.Generic
+﻿using System;
+using System.Collections.Generic;
+
+namespace CommonLibrary.ExtensionMethod
 {
     /// <Summary>
     /// ヒープソートをListに追加するための拡張メソッド
