@@ -49,6 +49,10 @@ namespace StreamClient
                 Printer.PrintDbg("Sender stopped");
                 throw;
             }
+            catch (SocketException)
+            {
+                Printer.PrintDbg("Waiting for remote");
+            }
         }
     }
 }
