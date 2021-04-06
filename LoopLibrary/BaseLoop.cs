@@ -11,7 +11,7 @@ namespace LoopLibrary
     public abstract class BaseLoop<T>
     {
         public readonly ulong id;
-        private readonly int _interval;
+        private int _interval;
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
         private int _count;
         public CancellationTokenSource Cts => _cts;
@@ -103,6 +103,11 @@ namespace LoopLibrary
                     return 0;
                 }
             }
+        }
+
+        public void SetInterval(int ms)
+        {
+            _interval = ms;
         }
     }
 }
