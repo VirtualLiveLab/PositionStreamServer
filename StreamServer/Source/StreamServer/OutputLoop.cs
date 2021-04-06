@@ -37,11 +37,15 @@ namespace StreamServer
             List<User> users = new List<User>();
             foreach (var kvp in ModelManager.Instance.Users)
             {
-                if (kvp.Value == null) continue;
+                if (kvp.Value == null)
+                    continue;
                 var user = kvp.Value;
+
                 MinimumAvatarPacket? packet = user.CurrentPacket;
                 {
-                    if (user.IsConnected && packet != null && DateTime.Now - user.DateTimeBox!.LastUpdated > new TimeSpan(0, 0, 1))
+                    // 最終パケットが１秒以上前だったら切断したものとする
+                    if (user.IsConnected && packet != null
+                        && DateTime.Now - user.DateTimeBox!.LastUpdated > new TimeSpan(0, 0, 1))
                     {
 #if DEBUG
                         Printer.PrintDbg($"Disconnected: [{user.UserId.ToString()}] " +
@@ -52,10 +56,15 @@ namespace StreamServer
                         ModelManager.Instance.Users.TryRemove(kvp.Key, out var dummy);
                     }
                 }
-                if (user.IsConnected) users.Add(user);
-                if (packet != null) packets.Add(packet);
+
+                // 有効なユーザとその最新のパケットをまとめる
+                if (user.IsConnected)
+                    users.Add(user);
+                if (packet != null)
+                    packets.Add(packet);
             }
 
+            // 論理プロセッサ分に分割して並列処理
             await Task.WhenAll(users.SplitInto(Environment.ProcessorCount).Select(userList => Task.Run(async () =>
             {
                 foreach (var user in userList)
