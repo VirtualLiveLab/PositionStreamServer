@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using CommonLibrary;
+using CommonLibrary.ExtensionMethod;
 using DebugPrintLibrary;
 using EventServerCore;
 using LoopLibrary;
@@ -20,7 +21,7 @@ namespace StreamServer
         {
             udp = udpClient;
         }
-        
+
         protected override void Start()
         {
             var localEndPoint = udp.Client.LocalEndPoint as IPEndPoint;
@@ -35,7 +36,7 @@ namespace StreamServer
             List<User> users = new List<User>();
             foreach (var kvp in ModelManager.Instance.Users)
             {
-                if(kvp.Value == null) continue;
+                if (kvp.Value == null) continue;
                 var user = kvp.Value;
                 MinimumAvatarPacket? packet = user.CurrentPacket;
                 {
@@ -53,10 +54,17 @@ namespace StreamServer
                 if (user.IsConnected) users.Add(user);
                 if (packet != null) packets.Add(packet);
             }
+
             List<Task> tasks = new List<Task>();
-            foreach (var user in users)
+            foreach (var userList in users.SplitInto(Environment.ProcessorCount))
             {
-                tasks.Add(PacketSender.Send(user, packets, udp));
+                tasks.Add(Task.Run(() =>
+               {
+                   foreach (var user in userList)
+                   {
+                       PacketSender.Send(user, packets, udp);
+                   }
+               }));
             }
             await Task.WhenAll(tasks);
         }
