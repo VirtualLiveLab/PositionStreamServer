@@ -14,7 +14,7 @@ namespace StreamServer
     {
         public static async Task Send(User user, List<MinimumAvatarPacket> packets, UdpClient udp)
         {
-            var packetCopy = packets;
+            var packetCopy = packets.ToList();
             if (user.CurrentPacket != null)
             {
                 var selfPosition = user.CurrentPacket.Position;
