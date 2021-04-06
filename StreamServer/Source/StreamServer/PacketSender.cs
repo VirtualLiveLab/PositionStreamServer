@@ -12,9 +12,9 @@ namespace StreamServer
 {
     public static class PacketSender
     {
-        public static void Send(User user, List<MinimumAvatarPacket> packets, UdpClient udp)
+        public static async Task Send(User user, List<MinimumAvatarPacket> packets, UdpClient udp)
         {
-            var packetCopy = packets.ToList();
+            var packetCopy = packets;
             if (user.CurrentPacket != null)
             {
                 var selfPosition = user.CurrentPacket.Position;
@@ -31,10 +31,9 @@ namespace StreamServer
             if (packetCopy.Count > 100)
                 packetCopy = packetCopy.GetRange(0, 100);
             var buffs = Utility.PacketsToBuffers(packetCopy);
-            var tasks = new List<Task>();
             foreach (var buf in buffs)
             {
-                udp.Send(buf, buf.Length, user.RemoteEndPoint);
+                await udp.SendAsync(buf, buf.Length, user.RemoteEndPoint);
             }
         }
     }

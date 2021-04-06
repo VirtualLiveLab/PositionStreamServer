@@ -41,8 +41,10 @@ namespace CommonLibrary
             MinimumAvatarPacket packet =
                 new MinimumAvatarPacket(userId, new Vector3(x, y, z), radY,
                     new Vector4(qx, qy, qz, qw), time);
-            if (packet.CheckRange()) return packet;
-            else return null;
+            if (packet.CheckRange())
+                return packet;
+            else
+                return null;
         }
 
         public static List<MinimumAvatarPacket> BufferToPackets(byte[] buf)

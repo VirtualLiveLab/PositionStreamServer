@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using System.Linq;
 using CommonLibrary;
 using CommonLibrary.ExtensionMethod;
 using DebugPrintLibrary;
@@ -55,18 +56,13 @@ namespace StreamServer
                 if (packet != null) packets.Add(packet);
             }
 
-            List<Task> tasks = new List<Task>();
-            foreach (var userList in users.SplitInto(Environment.ProcessorCount))
+            await Task.WhenAll(users.SplitInto(Environment.ProcessorCount).Select(userList => Task.Run(async () =>
             {
-                tasks.Add(Task.Run(() =>
-               {
-                   foreach (var user in userList)
-                   {
-                       PacketSender.Send(user, packets, udp);
-                   }
-               }));
-            }
-            await Task.WhenAll(tasks);
+                foreach (var user in userList)
+                {
+                    await PacketSender.Send(user, packets, udp);
+                }
+            })));
         }
     }
 }
