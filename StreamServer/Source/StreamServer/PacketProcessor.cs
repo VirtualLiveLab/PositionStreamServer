@@ -9,7 +9,7 @@ namespace StreamServer
 {
     public static class PacketProcessor
     {
-        public static async Task Process(UdpReceiveResult res)
+        public static void Process(UdpReceiveResult res)
         {
             var packet = Utility.BufferToPacket(res.Buffer);
             if (!ValidatePacket(packet))
