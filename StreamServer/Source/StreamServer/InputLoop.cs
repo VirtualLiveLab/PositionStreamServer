@@ -18,7 +18,7 @@ namespace StreamServer
         {
             udp = udpClient;
         }
-        
+
         protected override void Start()
         {
             IPEndPoint localEndPoint = (IPEndPoint)udp.Client.LocalEndPoint;
@@ -32,13 +32,12 @@ namespace StreamServer
             {
                 try
                 {
-                    UdpReceiveResult res;
-                    res = await udp.ReceiveAsync();
-                    var process = PacketProcessor.Process(res);
-                    tasks.Add(process);
-                } catch (SocketException e)
+                    UdpReceiveResult res = await udp.ReceiveAsync();
+                    tasks.Add(Task.Run(() => PacketProcessor.Process(res)));
+                }
+                catch (SocketException e)
                 {
-                    if (e.ErrorCode != 10054) //Client Disconnected.
+                    if (e.ErrorCode != 10054) // Client Disconnected.
                         Printer.PrintDbg(e, id);
                 }
             }
