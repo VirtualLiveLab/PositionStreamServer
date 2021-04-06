@@ -16,7 +16,7 @@ namespace StreamClient
             Printer.PrintDbg(ipaddr);
             var k = Int32.Parse(str);
             var ctsList = new List<CancellationTokenSource>();
-            for (int i = k; i < 1000 + k; ++i)
+            for (int i = 0; i < k; ++i)
             {
                 UdpClient udpClient = UdpClientFactory.CreateClient(ipaddr , 5577);
                 var position = new Vector3((short)(i%33*4), (short)0.5f, (short)(i/33*2));
