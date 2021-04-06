@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using DebugPrintLibrary;
 using EventServerCore;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace LoopLibrary
 {
@@ -13,6 +15,8 @@ namespace LoopLibrary
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
         private int _count;
         public CancellationTokenSource Cts => _cts;
+        private readonly int _maxTimespans = 100;
+        private Queue<double> _timespans = new Queue<double>();
 
         protected BaseLoop(int interval, ulong id = 1)
         {
@@ -34,9 +38,19 @@ namespace LoopLibrary
                 {
                     var delay = Task.Delay(_interval, token);
 
-                    await Update(_count);
-                    _count++;
-                    
+                    var start = DateTime.Now;
+                    await Update(_count++);
+                    var timespan = DateTime.Now - start;
+
+                    lock (_timespans)
+                    {
+                        _timespans.Enqueue(timespan.TotalMilliseconds);
+                        if (_timespans.Count > _maxTimespans)
+                        {
+                            _timespans.Dequeue();
+                        }
+                    }
+
                     await delay;
                 }
             }
@@ -57,7 +71,7 @@ namespace LoopLibrary
             }
         }
 
-        protected virtual void Start(){}
+        protected virtual void Start() { }
 
         protected abstract Task Update(int count);
 
@@ -68,12 +82,27 @@ namespace LoopLibrary
 
         public void Done(T result)
         {
-            throw new OperationCompletedException<Result<T>>(new Result<T>(true ,result));
+            throw new OperationCompletedException<Result<T>>(new Result<T>(true, result));
         }
 
         public void Cancel()
         {
             throw new OperationCanceledException();
+        }
+
+        public double GetFps()
+        {
+            lock (_timespans)
+            {
+                if (_timespans.Count > 0)
+                {
+                    return 1000 / _timespans.Average();
+                }
+                else
+                {
+                    return 0;
+                }
+            }
         }
     }
 }
