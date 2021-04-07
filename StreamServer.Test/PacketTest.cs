@@ -81,7 +81,7 @@ namespace StreamServer.Test
                 Assert.True(packet.CheckRange(), $"packet.CheckRange({i})");
             }
 
-            var buffs = Utility.PacketsToBuffers(packets).ToList();
+            var buffs = Utility.PacketsToBuffers(ref packets).ToList();
 
             const int nSize = 29;
             for (int i = 0; i < buffs.Count; ++i)
