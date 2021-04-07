@@ -114,11 +114,11 @@ namespace CommonLibrary
         public static byte[] PacketsToBuffer(List<MinimumAvatarPacket> packets)
         {
             int size = 27 * packets.Count + 4;
-            byte[] buff = new byte[27 * packets.Count + size];
+            byte[] buff = new byte[size];
 
             unsafe
             {
-                fixed (byte* _buff = new byte[27 * packets.Count + size])
+                fixed (byte* _buff = new byte[size])
                 {
                     *(int*)&_buff[0] = packets.Count;
 
