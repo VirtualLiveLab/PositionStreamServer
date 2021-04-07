@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -30,7 +30,7 @@ namespace StreamServer
 
             if (packetCopy.Count > 100)
                 packetCopy = packetCopy.GetRange(0, 100);
-            var buffs = Utility.PacketsToBuffers(packetCopy);
+            var buffs = Utility.PacketsToBuffers(ref packetCopy);
             foreach (var buf in buffs)
             {
                 await udp.SendAsync(buf, buf.Length, user.RemoteEndPoint);

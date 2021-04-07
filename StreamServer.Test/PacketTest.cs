@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using CommonLibrary;
 using Xunit;
 using Xunit.Abstractions;
@@ -20,7 +21,8 @@ namespace StreamServer.Test
             var packet = new MinimumAvatarPacket(1, new Vector3(2, 5, 6), 10,
                 new Vector4(2, 4, 3, 120), 0);
             Assert.True(packet.CheckRange(), "packet.CheckRange()");
-            var buff = Utility.PacketsToBuffer(new List<MinimumAvatarPacket> {packet});
+            var packets = new List<MinimumAvatarPacket> {packet};
+            var buff = Utility.PacketsToBuffer(ref packets);
             var decodedPacket = Utility.BufferToPackets(buff);
             Assert.Equal(packet.PaketId, decodedPacket![0].PaketId);
             Assert.Equal(packet.Position, decodedPacket![0].Position);
@@ -36,7 +38,8 @@ namespace StreamServer.Test
             var packet2 = new MinimumAvatarPacket(2, new Vector3((short) 7.5f, (short) 2.6f, (short) 9.2f), 99,
                 new Vector4(1, 9, 6, -1), 0);
             Assert.True(packet1.CheckRange() && packet2.CheckRange(), "packet1.CheckRange() && packet2.CheckRange()");
-            var buff = Utility.PacketsToBuffer(new List<MinimumAvatarPacket> {packet1, packet2});
+            var packets = new List<MinimumAvatarPacket> {packet1, packet2};
+            var buff = Utility.PacketsToBuffer(ref packets);
             var decodedPacket = Utility.BufferToPackets(buff);
 
             Assert.Equal(packet1.PaketId, decodedPacket![0].PaketId);
@@ -56,7 +59,8 @@ namespace StreamServer.Test
             var packet = new MinimumAvatarPacket(3, new Vector3(), 0,
                 new Vector4(), 0);
             Assert.True(packet.CheckRange(), "packet.CheckRange()");
-            var buff = Utility.PacketsToBuffer(new List<MinimumAvatarPacket> {packet});
+            var packets = new List<MinimumAvatarPacket> {packet};
+            var buff = Utility.PacketsToBuffer(ref packets);
             var decodedPacket = Utility.BufferToPackets(buff);
             Assert.Equal(packet.PaketId, decodedPacket![0].PaketId);
             Assert.Equal(packet.Position, decodedPacket![0].Position);
@@ -77,7 +81,7 @@ namespace StreamServer.Test
                 Assert.True(packet.CheckRange(), $"packet.CheckRange({i})");
             }
 
-            var buffs = Utility.PacketsToBuffers(packets);
+            var buffs = Utility.PacketsToBuffers(packets).ToList();
 
             const int nSize = 29;
             for (int i = 0; i < buffs.Count; ++i)

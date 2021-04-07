@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Linq;
 
 namespace CommonLibrary
 {
@@ -85,7 +86,7 @@ namespace CommonLibrary
             return null;
         }
 
-        public static byte[] PacketToBuffer(MinimumAvatarPacket packet)
+        public static byte[] PacketToBuffer(in MinimumAvatarPacket packet)
         {
             int size = 31;
             byte[] buff = new byte[size];
@@ -111,7 +112,7 @@ namespace CommonLibrary
             return buff;
         }
 
-        public static byte[] PacketsToBuffer(List<MinimumAvatarPacket> packets)
+        public static byte[] PacketsToBuffer(ref List<MinimumAvatarPacket> packets)
         {
             int size = 27 * packets.Count + 4;
             byte[] buff = new byte[size];
@@ -144,7 +145,7 @@ namespace CommonLibrary
             return buff;
         }
 
-        public static List<byte[]> PacketsToBuffers(List<MinimumAvatarPacket> packets)
+        public static IEnumerable<byte[]> PacketsToBuffers(ref List<MinimumAvatarPacket> packets)
         {
             var packetsList = new List<List<MinimumAvatarPacket>>();
             const int nSize = 29;
@@ -152,14 +153,7 @@ namespace CommonLibrary
             {
                 packetsList.Add(packets.GetRange(i, Math.Min(nSize, packets.Count - i)));
             }
-
-            var buffersList = new List<byte[]>();
-            foreach (var pcs in packetsList)
-            {
-                buffersList.Add(PacketsToBuffer(pcs));
-            }
-
-            return buffersList;
+            return packetsList.Select(pcs => PacketsToBuffer(ref pcs));
         }
     }
 }
