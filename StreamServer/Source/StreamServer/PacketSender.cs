@@ -15,6 +15,7 @@ namespace StreamServer
         public static async Task Send(User user, List<MinimumAvatarPacket> packets, UdpClient udp)
         {
             var packetCopy = packets.ToList();
+            const int maxCount = 100;
             if (user.CurrentPacket != null)
             {
                 var selfPosition = user.CurrentPacket.Position;
@@ -25,11 +26,11 @@ namespace StreamServer
                     var bSquare = Vector3.Square(b.Position, selfPosition);
                     var comp = aSquare < bSquare ? -1 : 1;
                     return comp;
-                });
+                }, maxCount);
             }
 
-            if (packetCopy.Count > 100)
-                packetCopy = packetCopy.GetRange(0, 100);
+            if (packetCopy.Count > maxCount)
+                packetCopy = packetCopy.GetRange(0, maxCount);
             var buffs = Utility.PacketsToBuffers(ref packetCopy);
             foreach (var buf in buffs)
             {
