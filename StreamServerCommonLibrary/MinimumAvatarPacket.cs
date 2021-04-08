@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace CommonLibrary
 {
@@ -43,7 +43,7 @@ namespace CommonLibrary
             this.time = time;
         }
 
-        
+
         /// <summary>
         /// Rangeが決まっているものについてチェックする
         /// </summary>
@@ -56,6 +56,11 @@ namespace CommonLibrary
             var neckZ = this.NeckRotation.z;
             var neckW = this.NeckRotation.w;
             return Math.Abs(radY) < 128 && Math.Abs(neckX) < 128 && Math.Abs(neckY) < 128 && Math.Abs(neckZ) < 128 && Math.Abs(neckW) < 128;
+        }
+
+        public override string ToString()
+        {
+            return $"{{ Id={PaketId}, Pos={{{Position.x}, {Position.y}, {Position.z}}}, RadY={RadY}, Time={time}, Neck={{{NeckRotation.x}, {NeckRotation.y}, {NeckRotation.z}, {NeckRotation.w}}} }}";
         }
     }
 }
