@@ -33,11 +33,11 @@ namespace CommonLibrary
             var y = BitConverter.ToInt16(buf, offset += sizeof(short));
             var z = BitConverter.ToInt16(buf, offset += sizeof(short));
             offset += sizeof(short);
-            var radY = PacketUtil.ConvertInt(buf[offset]);
-            var qx = PacketUtil.ConvertInt(buf[offset + 1]);
-            var qy = PacketUtil.ConvertInt(buf[offset + 2]);
-            var qz = PacketUtil.ConvertInt(buf[offset + 3]);
-            var qw = PacketUtil.ConvertInt(buf[offset + 4]);
+            var radY = (sbyte)buf[offset];
+            var qx = (sbyte)buf[offset + 1];
+            var qy = (sbyte)buf[offset + 2];
+            var qz = (sbyte)buf[offset + 3];
+            var qw = (sbyte)buf[offset + 4];
             var time = BitConverter.ToDouble(buf, offset + 5);
             MinimumAvatarPacket packet =
                 new MinimumAvatarPacket(userId, new Vector3(x, y, z), radY,
@@ -66,11 +66,11 @@ namespace CommonLibrary
                         var y = BitConverter.ToInt16(buf, offset += sizeof(short));
                         var z = BitConverter.ToInt16(buf, offset += sizeof(short));
                         offset += sizeof(short);
-                        var radY = PacketUtil.ConvertInt(buf[offset]);
-                        var qx = PacketUtil.ConvertInt(buf[offset + 1]);
-                        var qy = PacketUtil.ConvertInt(buf[offset + 2]);
-                        var qz = PacketUtil.ConvertInt(buf[offset + 3]);
-                        var qw = PacketUtil.ConvertInt(buf[offset + 4]);
+                        var radY = (sbyte)buf[offset];
+                        var qx = (sbyte)buf[offset + 1];
+                        var qy = (sbyte)buf[offset + 2];
+                        var qz = (sbyte)buf[offset + 3];
+                        var qw = (sbyte)buf[offset + 4];
                         var time = BitConverter.ToDouble(buf, offset + 5);
                         MinimumAvatarPacket packet = new MinimumAvatarPacket(userId, new Vector3(x, y, z),
                             radY,
