@@ -16,6 +16,7 @@ namespace StreamServer
             this.outputLoop = outputLoop;
         }
 
+        #pragma warning disable CS1998
         protected override async Task Update(int count)
         {
             Printer.PrintDbg($"Num clients: {ModelManager.Instance.Users.Count.ToString()}");
