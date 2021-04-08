@@ -5,6 +5,7 @@
         <RootNamespace>CommonLibrary</RootNamespace>
         <Nullable>disable</Nullable>
         <LangVersion>latest</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
 </Project>

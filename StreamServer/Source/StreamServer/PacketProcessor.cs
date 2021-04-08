@@ -9,47 +9,33 @@ namespace StreamServer
 {
     public static class PacketProcessor
     {
-        public static async Task Process(UdpReceiveResult res)
+        public static void Process(UdpReceiveResult res)
         {
-            try
+            var packet = Utility.BufferToPacket(res.Buffer);
+            if (!ValidatePacket(packet))
             {
-                await Task.Run(() =>
-                {
-                    var buf = res.Buffer;
-                    var optPacket = Utility.BufferToPacket(buf);
-                    if (!ValidatePacket(optPacket)) return;
-                    var packet = optPacket!;
-                    var users = ModelManager.Instance.Users;
-
-                    var user = users.ContainsKey(packet.PaketId) && users[packet.PaketId].IsConnected
-                        ? users[packet.PaketId] = new User(users[packet.PaketId])
-                        : users[packet.PaketId] = new User(packet.PaketId);
-
-
-                    if (!user.IsConnected)
-                    {
-                        Printer.PrintDbg($"Connected: [{user.UserId.ToString()}] " +
-                                         $"({res.RemoteEndPoint.Address}: {res.RemoteEndPoint.Port.ToString()})");
-                    }
-                    
-                    user.RemoteEndPoint = res.RemoteEndPoint;
-
-                    user.CurrentPacket = packet;
-                    user.DateTimeBox = new DateTimeBox(DateTime.Now);
-                    user.IsConnected = true;
-                    users[packet.PaketId] = user;
-                });
+                return;
             }
-            catch (Exception e)
+            var users = ModelManager.Instance.Users;
+
+            User? user;
+            if (!users.TryGetValue(packet.PaketId, out user))
             {
-                Printer.PrintDbg(e);
+                // RemoteEndPointから来た最初のパケットの場合
+                user = users[packet.PaketId] = new User(packet.PaketId);
+                user.RemoteEndPoint = res.RemoteEndPoint;
+                Printer.PrintDbg($"Connected: [{user.UserId.ToString()}] " +
+                                 $"({res.RemoteEndPoint.Address}: {res.RemoteEndPoint.Port.ToString()})");
             }
+
+            user.CurrentPacket = packet;
+            user.DateTimeBox = new DateTimeBox(DateTime.Now);
+            user.IsConnected = true;
         }
 
         private static bool ValidatePacket(in MinimumAvatarPacket? packet)
         {
             return packet != null;
-            //&& ModelManager.Instance.Users.ContainsKey(packet.PaketId);
         }
     }
 }

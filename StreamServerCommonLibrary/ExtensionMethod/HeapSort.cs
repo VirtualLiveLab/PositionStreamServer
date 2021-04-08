@@ -15,7 +15,7 @@ namespace CommonLibrary.ExtensionMethod
         /// <param name="comparison"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static void HeapSort<T>(this List<T> array, Comparison<T> comparison)
+        public static void HeapSort<T>(this List<T> array, Comparison<T> comparison, int? count = null)
         {
             // 必要なヒープ用配列を確保します
             var heap = new T[array.Count];
@@ -26,7 +26,7 @@ namespace CommonLibrary.ExtensionMethod
                 Insert(ref num, ref heap, array[target], comparison);
 
             // ヒープから取り出しながら配列に格納します。
-            for (var target = 0; num > 0; target++)
+            for (var target = 0; num > 0 && (count != null && target < count); target++)
                 array[target] = DeleteGetValue(ref num, ref heap, comparison);
         }
 
