@@ -64,6 +64,6 @@ $ sysctl net.core.rmem_max
 net.core.rmem_max = 212992 # デフォルトではけっこう少ない
 
 # デフォルトサイズも適当に増やしておく
-$ echo net.core.rmem_default=50000000 | sudo tee -a /etc/sysctl.conf
-$ echo net.core.rmem_max=150000000 | sudo tee -a /etc/sysctl.conf
+$ sudo sysctl -w net.core.rmem_default=50000000
+$ sudo sysctl -w net.core.rmem_max=150000000
 ```
