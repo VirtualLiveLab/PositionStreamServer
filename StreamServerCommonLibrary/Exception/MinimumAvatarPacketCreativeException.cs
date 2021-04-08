@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
+#nullable enable
 namespace CommonLibrary.Exception
 {  [Serializable]
      
