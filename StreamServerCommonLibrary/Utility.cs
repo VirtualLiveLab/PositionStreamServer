@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Runtime.InteropServices;
+using System.Linq;
 
 namespace CommonLibrary
 {
@@ -40,8 +42,10 @@ namespace CommonLibrary
             MinimumAvatarPacket packet =
                 new MinimumAvatarPacket(userId, new Vector3(x, y, z), radY,
                     new Vector4(qx, qy, qz, qw), time);
-            if (packet.CheckRange()) return packet;
-            else return null;
+            if (packet.CheckRange())
+                return packet;
+            else
+                return null;
         }
 
         public static List<MinimumAvatarPacket> BufferToPackets(byte[] buf)
@@ -71,7 +75,7 @@ namespace CommonLibrary
                         MinimumAvatarPacket packet = new MinimumAvatarPacket(userId, new Vector3(x, y, z),
                             radY,
                             new Vector4(qx, qy, qz, qw), time);
-                        if(packet.CheckRange()) packets.Add(packet);
+                        if (packet.CheckRange()) packets.Add(packet);
                     }
 
                     return packets;
@@ -82,64 +86,66 @@ namespace CommonLibrary
             return null;
         }
 
-        public static byte[] PacketToBuffer(MinimumAvatarPacket packet)
+        public static byte[] PacketToBuffer(in MinimumAvatarPacket packet)
         {
-            byte[] buff = new byte[31];
-            var numPackets = BitConverter.GetBytes(1);
-            Buffer.BlockCopy(numPackets, 0, buff, 0, sizeof(int));
-            var id = BitConverter.GetBytes(packet.PaketId);
-            var bx = BitConverter.GetBytes(packet.Position.x);
-            var by = BitConverter.GetBytes(packet.Position.y);
-            var bz = BitConverter.GetBytes(packet.Position.z);
-            var bRadY = PacketUtil.ConvertByte(packet.RadY);
-            var bQx = PacketUtil.ConvertByte(packet.NeckRotation.x);
-            var bQy = PacketUtil.ConvertByte(packet.NeckRotation.y);
-            var bQz = PacketUtil.ConvertByte(packet.NeckRotation.z);
-            var bQw = PacketUtil.ConvertByte(packet.NeckRotation.w);
-            var time = BitConverter.GetBytes(packet.time);
-            byte[] body = {bRadY, bQx, bQy, bQz, bQw};
-            Buffer.BlockCopy(id, 0, buff, 4, id.Length);
-            Buffer.BlockCopy(bx, 0, buff, 12, bx.Length);
-            Buffer.BlockCopy(by, 0, buff, 14, by.Length);
-            Buffer.BlockCopy(bz, 0, buff, 16, bz.Length);
-            Buffer.BlockCopy(body, 0, buff, 18, body.Length);
-            Buffer.BlockCopy(time, 0, buff, 23, time.Length);
+            int size = 31;
+            byte[] buff = new byte[size];
+
+            unsafe
+            {
+                fixed (byte* _buff = new byte[size])
+                {
+                    *(int*)&_buff[0] = 1;
+                    *(ulong*)&_buff[4] = packet.PaketId;
+                    *(short*)&_buff[12] = packet.Position.x;
+                    *(short*)&_buff[14] = packet.Position.y;
+                    *(short*)&_buff[16] = packet.Position.z;
+                    *(byte*)&_buff[18] = (byte)packet.RadY;
+                    *(byte*)&_buff[19] = (byte)packet.NeckRotation.x;
+                    *(byte*)&_buff[20] = (byte)packet.NeckRotation.y;
+                    *(byte*)&_buff[21] = (byte)packet.NeckRotation.z;
+                    *(byte*)&_buff[22] = (byte)packet.NeckRotation.w;
+                    *(double*)&_buff[23] = packet.time;
+                    Marshal.Copy((IntPtr)_buff, buff, 0, buff.Length);
+                }
+            }
             return buff;
         }
 
-        public static byte[] PacketsToBuffer(List<MinimumAvatarPacket> packets)
+        public static byte[] PacketsToBuffer(ref List<MinimumAvatarPacket> packets)
         {
-            int offset = 4;
-            byte[] buff = new byte[27 * packets.Count + offset];
-            var numPackets = BitConverter.GetBytes(packets.Count);
-            Buffer.BlockCopy(numPackets, 0, buff, 0, sizeof(int));
-            for (int i = 0; i < packets.Count; ++i)
+            int size = 27 * packets.Count + 4;
+            byte[] buff = new byte[size];
+
+            unsafe
             {
-                var packet = packets[i];
-                offset = 4 + i * 27;
-                var id = BitConverter.GetBytes(packet.PaketId);
-                var bx = BitConverter.GetBytes(packet.Position.x);
-                var by = BitConverter.GetBytes(packet.Position.y);
-                var bz = BitConverter.GetBytes(packet.Position.z);
-                var bRadY = PacketUtil.ConvertByte(packet.RadY);
-                var bQx = PacketUtil.ConvertByte(packet.NeckRotation.x);
-                var bQy = PacketUtil.ConvertByte(packet.NeckRotation.y);
-                var bQz = PacketUtil.ConvertByte(packet.NeckRotation.z);
-                var bQw = PacketUtil.ConvertByte(packet.NeckRotation.w);
-                var time = BitConverter.GetBytes(packet.time);
-                byte[] body = {bRadY, bQx, bQy, bQz, bQw};
-                Buffer.BlockCopy(id, 0, buff, offset, id.Length);
-                Buffer.BlockCopy(bx, 0, buff, offset += id.Length, bx.Length);
-                Buffer.BlockCopy(by, 0, buff, offset += bx.Length, by.Length);
-                Buffer.BlockCopy(bz, 0, buff, offset += by.Length, bz.Length);
-                Buffer.BlockCopy(body, 0, buff, offset += bz.Length, body.Length);
-                Buffer.BlockCopy(time, 0, buff, offset += body.Length, time.Length);
+                fixed (byte* _buff = new byte[size])
+                {
+                    *(int*)&_buff[0] = packets.Count;
+
+                    for (int i = 0; i < packets.Count; ++i)
+                    {
+                        var packet = packets[i];
+                        byte* first = &_buff[4 + i * 27];
+                        *(ulong*)&first[0] = packet.PaketId;
+                        *(short*)&first[8] = packet.Position.x;
+                        *(short*)&first[10] = packet.Position.y;
+                        *(short*)&first[12] = packet.Position.z;
+                        *(byte*)&first[14] = (byte)packet.RadY;
+                        *(byte*)&first[15] = (byte)packet.NeckRotation.x;
+                        *(byte*)&first[16] = (byte)packet.NeckRotation.y;
+                        *(byte*)&first[17] = (byte)packet.NeckRotation.z;
+                        *(byte*)&first[18] = (byte)packet.NeckRotation.w;
+                        *(double*)&first[19] = packet.time;
+                    }
+                    Marshal.Copy((IntPtr)_buff, buff, 0, buff.Length);
+                }
             }
 
             return buff;
         }
 
-        public static List<byte[]> PacketsToBuffers(List<MinimumAvatarPacket> packets)
+        public static IEnumerable<byte[]> PacketsToBuffers(ref List<MinimumAvatarPacket> packets)
         {
             var packetsList = new List<List<MinimumAvatarPacket>>();
             const int nSize = 29;
@@ -147,14 +153,7 @@ namespace CommonLibrary
             {
                 packetsList.Add(packets.GetRange(i, Math.Min(nSize, packets.Count - i)));
             }
-
-            var buffersList = new List<byte[]>();
-            foreach (var pcs in packetsList)
-            {
-                buffersList.Add(PacketsToBuffer(pcs));
-            }
-
-            return buffersList;
+            return packetsList.Select(pcs => PacketsToBuffer(ref pcs));
         }
     }
 }
