@@ -18,8 +18,7 @@ namespace StreamServer
             }
             var users = ModelManager.Instance.Users;
 
-            User? user;
-            if (!users.TryGetValue(packet.PaketId, out user))
+            if (!users.TryGetValue(packet.PaketId, out var user))
             {
                 // RemoteEndPointから来た最初のパケットの場合
                 user = users[packet.PaketId] = new User(packet.PaketId);

@@ -7,8 +7,8 @@ namespace StreamServer
 {
     public class StatusCheckLoop : BaseLoop<Unit>
     {
-        private InputLoop inputLoop;
-        private OutputLoop outputLoop;
+        private readonly InputLoop inputLoop;
+        private readonly OutputLoop outputLoop;
         public StatusCheckLoop(int interval, ulong id, InputLoop inputLoop, OutputLoop outputLoop)
             : base(interval, id)
         {
