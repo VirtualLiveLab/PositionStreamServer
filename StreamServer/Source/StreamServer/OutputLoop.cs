@@ -26,9 +26,7 @@ namespace StreamServer
         protected override void Start()
         {
             var localEndPoint = udp.Client.LocalEndPoint as IPEndPoint;
-#if DEBUG
             Printer.PrintDbg($"localhost: [{localEndPoint?.Port.ToString()}] -> Any");
-#endif
         }
 
         protected override async Task Update(int count)
@@ -47,10 +45,8 @@ namespace StreamServer
                     if (user.IsConnected && packet != null
                         && DateTime.Now - user.DateTimeBox!.LastUpdated > new TimeSpan(0, 0, 1))
                     {
-#if DEBUG
                         Printer.PrintDbg($"Disconnected: [{user.UserId.ToString()}] " +
-                                 $"({user.RemoteEndPoint!.Address}: {user.RemoteEndPoint.Port.ToString()})");
-#endif
+                                         $"({user.RemoteEndPoint!.Address}: {user.RemoteEndPoint.Port.ToString()})");
                         user.CurrentPacket = packet = null;
                         user.IsConnected = false;
                         ModelManager.Instance.Users.TryRemove(kvp.Key, out var dummy);
